@@ -1,0 +1,7 @@
+db.sqlite3
+webapps/__pycache__
+*.log
+*.pot
+*.pyc
+
+env/
