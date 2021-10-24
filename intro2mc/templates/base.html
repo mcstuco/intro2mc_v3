@@ -43,12 +43,13 @@
                 }
             }
         </script>
+        {% block script %}{% endblock %}
     </head>
 
 	<body>
-        <div id="nav-bar" class="sticky-top pt-3 pb-2">
+        <div id="nav-bar" class="sticky-top">
             <div id='nav-bg'></div>
-            <div class="container">
+            <div class="container pt-3 pb-2">
                 <div class='row small text-center justify-content-center align-items-center'>
                     <img class="d-lg-none m-sm-1 m-md-2" id='drp_btn' src="{% static '/icon/chest_closed.png' %}" height='50px' width='50px' OnClick='drp_handler()'>
                     
@@ -86,13 +87,14 @@
                     </div>
                   </div>
             </div>
-        </div>
 
-        <div id="error">
-            <div class="container" onclick='removeErr()'>
-                {% block error %}{% endblock %}
+            <div id="error" class="position-top">
+                <div class="container" onclick='removeErr()'>
+                    {% block error %}{% endblock %}
+                </div>
             </div>
         </div>
+
 
         <div id="content" class="container text-center">
             {% block content %}{% endblock %}

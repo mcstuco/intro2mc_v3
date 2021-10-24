@@ -60,7 +60,6 @@
     width: 100%;
     color: white;
     background-color: rgb(225, 80, 80) !important;
-    position: fixed;
 }
 
 #error:hover {
@@ -92,4 +91,12 @@ footer a:hover {
 #content {
     /* background-color: lightblue; */
     min-height: 100vh;
+}
+
+.content-box {
+    border-radius: 50px;
+}
+
+iframe {
+    border-radius: 15px;
 }

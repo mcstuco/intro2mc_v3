@@ -22,6 +22,9 @@ def home(request):
         context['error'] = request.session.get('error')
         del request.session['error']
     
+    context['videos'] = [{
+        'videoURL': 'https://www.youtube.com/embed/QeaoV7ESihg'
+    }] * 10
     return render(request, 'index.html', context)
 
 @login_required

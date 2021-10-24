@@ -4,6 +4,7 @@ from django.db import models
 class Student(models.Model):
     andrewID = models.CharField(max_length=200, primary_key=True)
     name = models.CharField(max_length=200)
+    picture = models.CharField(max_length=200)
     IGN = models.CharField(max_length=200)
 
 class ClassSession(models.Model):
