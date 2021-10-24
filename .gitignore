@@ -5,3 +5,6 @@ webapps/__pycache__
 *.pyc
 
 env/
+client_secrets.json
+keys.ini
+*/migrations
