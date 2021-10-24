@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Student Portal
+{% endblock %}
+
+{% block content %}
+    <h1>Welcome, {{ first_name }} ({{ andrew_id }})</h1>
+    <img src="{{ picture }}" alt="">
+    <a href="{% url 'logout' %}">Log out</a>
+{% endblock %}

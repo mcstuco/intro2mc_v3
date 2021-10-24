@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    {% load static %}
+		<title> {% block title %} 98-205 Stu-Co: Introduction to Minecraft {% endblock %} </title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href="{% static 'css/base.css' %}" rel="stylesheet" type="text/css">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+        <script>
+            let collapsed = true
+            function drp_handler() {
+                let drp_btn = document.querySelector("#drp_btn")
+                let menur = document.querySelector("#menur")
+                let menul = document.querySelector("#menul")
+                let menus = [menul, menur]
+
+                if (!collapsed) {
+                    drp_btn.src = "{% static '/icon/chest_closed.png' %}"
+                    menul.classList.add('d-none')
+                    menur.classList.add('d-none')
+                } else {
+                    drp_btn.src = "{% static '/icon/chest_open.png' %}"
+                    menus.forEach((menu, i) => {
+                        menu.classList.remove('d-none')
+                        menu.style.setProperty('opacity', '0', 'important')
+                        menu.style.setProperty('visibility', 'hidden', 'important')
+                        setTimeout(() => {
+                            menu.style.setProperty('opacity', '1', 'important')
+                            menu.style.setProperty('visibility', 'visible', 'important')
+                        }, 50 * (i+1))
+                    })
+                }
+                collapsed = !collapsed
+            }
+
+            function removeErr() {
+                if (err_msg = document.querySelector("#err_msg")) {
+                    err_msg.remove()
+                }
+            }
+        </script>
+    </head>
+
+	<body>
+        <div id="nav-bar" class="sticky-top pt-3 pb-2">
+            <div id='nav-bg'></div>
+            <div class="container">
+                <div class='row small text-center justify-content-center align-items-center'>
+                    <img class="d-lg-none m-sm-1 m-md-2" id='drp_btn' src="{% static '/icon/chest_closed.png' %}" height='50px' width='50px' OnClick='drp_handler()'>
+                    
+                    <a class="col-lg col-8 order-lg-2 order-md-1 mb-lg-0 mb-3 my-auto" href="{% url 'home' %}">
+                        <img id='logo' class="img-fluid" src="{% static '/icon/logo.png' %}">
+                    </a>
+    
+                    <div id='menul' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-lg-1 order-md-2'>
+                        <a class='nav-icon mx-auto col-4' href='{{ syllabus }}' target='_blank'>
+                            <img src="{% static '/icon/book_and_quill.png' %}" height='30px'>
+                            <br><span>SYLLABUS</span>
+                        </a>
+                        <a class='nav-icon mx-auto col-4' href='' target='' onclick='unfinishedFeature()'>
+                            <img src="{% static '/icon/painting2.png' %}" height='30px'>
+                            <br><span>VIDEOS</span>
+                        </a>
+                        <a class='nav-icon mx-auto col-4' href='#resources-anchor'>
+                            <img src="{% static '/icon/diamond_pickaxe.png' %}" height='30px'>
+                            <br><span>RESOURCES</span>
+                        </a>
+                    </div>
+                    <div id='menur' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-3'>
+                        <a class='nav-icon mx-auto col-4' href='#portals-anchor' target=''>
+                            <img src="{% static '/icon/nether_portal.gif' %}" height='30px'>
+                            <br><span>STUDENT</span>
+                        </a>
+                        <a class='nav-icon mx-auto col-4' href='' target='_blank'>
+                            <img src="{% static '/icon/map.png' %}" height='30px'>
+                            <br><span>MAP</span>
+                        </a>
+                        <a class='nav-icon mx-auto col-4' href="cactus.html">
+                            <img src="{% static '/icon/cactus.png' %}" height='30px'>
+                            <br><span>CACTUS</span>
+                        </a>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+        <div id="error">
+            <div class="container" onclick='removeErr()'>
+                {% block error %}{% endblock %}
+            </div>
+        </div>
+
+        {% block content %}{% endblock %}
+	</body>
+</html>

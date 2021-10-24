@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block error %}
+    {% if error %}
+        <div class="p-1" id="err_msg">
+            <div><strong>Error: {{error.type}}</strong> - {{error.msg}}</div>
+            <div>Please contact course instructors if you believe there was a mistake.</div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if user and user.is_authenticated %}
+        <a href="{% url 'account' %}">My account</a>
+        {{ user }}
+    {% else %}
+        <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
+    {% endif %}
+    <div>
+        {{ svg|safe }}
+    </div>
+{% endblock %}
