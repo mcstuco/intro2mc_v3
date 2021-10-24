@@ -81,7 +81,15 @@
     filter: brightness(90%);
 }
 
-body {
-    background-color: lightblue;
-    min-height: 120vh;
+footer a {
+    color: black;
+}
+
+footer a:hover {
+    color: black;
+}
+
+#content {
+    /* background-color: lightblue; */
+    min-height: 100vh;
 }

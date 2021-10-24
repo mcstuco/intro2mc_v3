@@ -10,7 +10,7 @@ def auth_allowed(backend, details, response, *args, **kwargs):
     }
 
     if not backend.auth_allowed(response, details):
-        error['msg'] = f"Looks like your account ({email}) doesn't have a CMU domain.\
+        error['msg'] = f"Looks like your account ({email}) doesn't use a CMU domain.\
                  Please try again with a CMU email."
 
         backend.strategy.session_set('error', error)
