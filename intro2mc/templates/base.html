@@ -93,8 +93,25 @@
                     {% block error %}{% endblock %}
                 </div>
             </div>
+
+            <div id="info" class="position-top">
+                <div class="container" onclick='removeErr()'>
+                    {% block info %}{% endblock %}
+                </div>
+            </div>
         </div>
 
+        <div id="home-img" class="text-center align-middle align-items-center p-5"
+             style="background-image: url('{% static "/background/bg.png"%}')">
+            <div class="p-5">
+                <div class="h2 text-white">About</div>
+                <br>
+                <div class="text-white lead font-weight-normal">
+                    This is the offical website for 98-205 StuCo: Introduction <br>to Minecraft at Carnegie Mellon University.
+                </div>
+                <br>
+            </div>
+        </div>
 
         <div id="content" class="container text-center">
             {% block content %}{% endblock %}

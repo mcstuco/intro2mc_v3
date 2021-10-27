@@ -59,10 +59,16 @@
 #error {
     width: 100%;
     color: white;
-    background-color: rgb(225, 80, 80) !important;
+    background-color: #E15050 !important;
 }
 
-#error:hover {
+#info {
+    width: 100%;
+    color: white;
+    background-color: #007DDB !important;
+}
+
+#error:hover, #info:hover {
     -webkit-filter: brightness(105%);
     -moz-filter: brightness(105%);
     -o-filter: brightness(105%);
@@ -72,12 +78,21 @@
     transition-duration: 0.2s;
 }
 
-#error:active {
+#error:active, #info:active {
     -webkit-filter: brightness(90%);
     -moz-filter: brightness(90%);
     -o-filter: brightness(90%);
     -ms-filter: brightness(90%);
     filter: brightness(90%);
+}
+
+#home-img {
+    width: 100%;
+    max-width: 4096px;
+    background-repeat: no-repeat;
+    background-attachment: local;
+    background-position: center center !important;
+    background-size: fill !important;
 }
 
 footer a {
