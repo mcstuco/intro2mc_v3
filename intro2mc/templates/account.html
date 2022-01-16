@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Welcome, {{ first_name }} ({{ andrew_id }})</h1>
-    <img src="{{ picture }}" alt="">
+    <h1>Welcome, {{ userinfo.first_name }} ({{ userinfo.andrew_id }})</h1>
+    <img src="{{ userinfo.picture }}" alt="">
     <a href="{% url 'logout' %}">Log out</a>
 {% endblock %}

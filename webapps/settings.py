@@ -92,7 +92,9 @@ LOGOUT_REDIRECT_URL = '/'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['profile', 'email']
-SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ['andrew.cmu.edu']
+SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ['andrew.cmu.edu', 'cmu.edu']
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = { 'prompt': 'select_account' }
 
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',

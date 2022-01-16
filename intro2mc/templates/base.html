@@ -3,6 +3,7 @@
 	<head>
 	    <meta charset="utf-8">
 	    {% load static %}
+        {% load template_filters %}
 		<title> {% block title %} 98-205 Stu-Co: Introduction to Minecraft {% endblock %} </title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link href="{% static 'css/base.css' %}" rel="stylesheet" type="text/css">
@@ -37,69 +38,99 @@
                 collapsed = !collapsed
             }
 
-            function removeErr() {
-                if (err_msg = document.querySelector("#err_msg")) {
-                    err_msg.remove()
-                }
-            }
+            // function removeErr() {
+            //     if (err_msg = document.querySelector("#err_msg")) {
+            //         err_msg.remove()
+            //     }
+            // }
         </script>
         {% block script %}{% endblock %}
     </head>
 
 	<body>
         <div id="nav-bar" class="sticky-top">
-            <div id='nav-bg'></div>
-            <div class="container pt-3 pb-2">
-                <div class='row small text-center justify-content-center align-items-center'>
-                    <img class="d-lg-none m-sm-1 m-md-2" id='drp_btn' src="{% static '/icon/chest_closed.png' %}" height='50px' width='50px' OnClick='drp_handler()'>
-                    
-                    <a class="col-lg col-8 order-lg-2 order-md-1 mb-lg-0 mb-3 my-auto" href="{% url 'home' %}">
-                        <img id='logo' class="img-fluid" src="{% static '/icon/logo.png' %}">
-                    </a>
-    
-                    <div id='menul' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-lg-1 order-md-2'>
-                        <a class='nav-icon mx-auto col-4' href='{{ syllabus }}' target='_blank'>
-                            <img src="{% static '/icon/book_and_quill.png' %}" height='30px'>
-                            <br><span>SYLLABUS</span>
+            <div class="" style="position: relative;">
+                <div id='nav-bg'></div>
+                <div class="container pt-3 pb-2">
+                    <div class='row small text-center justify-content-center align-items-center'>
+                        <img class="d-lg-none m-sm-1 m-md-2" id='drp_btn' src="{% static '/icon/chest_closed.png' %}" height='50px' width='50px' OnClick='drp_handler()'>
+                        
+                        <a class="col-lg col-8 order-lg-2 order-md-1 mb-lg-0 mb-3 my-auto" href="{% url 'home' %}">
+                            <img id='logo' class="img-fluid" src="{% static '/icon/logo.png' %}">
                         </a>
-                        <a class='nav-icon mx-auto col-4' href='' target='' onclick='unfinishedFeature()'>
-                            <img src="{% static '/icon/painting2.png' %}" height='30px'>
-                            <br><span>VIDEOS</span>
-                        </a>
-                        <a class='nav-icon mx-auto col-4' href='#resources-anchor'>
-                            <img src="{% static '/icon/diamond_pickaxe.png' %}" height='30px'>
-                            <br><span>RESOURCES</span>
-                        </a>
-                    </div>
-                    <div id='menur' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-3'>
-                        <a class='nav-icon mx-auto col-4' href="{% url 'account' %}" target=''>
-                            <img src="{% static '/icon/nether_portal.gif' %}" height='30px'>
-                            <br><span>STUDENT</span>
-                        </a>
-                        <a class='nav-icon mx-auto col-4' href='' target='_blank'>
-                            <img src="{% static '/icon/map.png' %}" height='30px'>
-                            <br><span>MAP</span>
-                        </a>
-                        <a class='nav-icon mx-auto col-4' href="cactus.html">
-                            <img src="{% static '/icon/cactus.png' %}" height='30px'>
-                            <br><span>CACTUS</span>
-                        </a>
-                    </div>
-                  </div>
+        
+                        <div id='menul' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-lg-1 order-md-2'>
+                            <a class='nav-icon mx-auto col-4' href="{% url 'syllabus' %}" target='_blank'>
+                                <img src="{% static '/icon/book_and_quill.png' %}" height='30px'>
+                                <br><span>SYLLABUS</span>
+                            </a>
+                            <a class='nav-icon mx-auto col-4' href='' target='' onclick='unfinishedFeature()'>
+                                <img src="{% static '/icon/painting2.png' %}" height='30px'>
+                                <br><span>VIDEOS</span>
+                            </a>
+                            <a class='nav-icon mx-auto col-4' href='#resources-anchor'>
+                                <img src="{% static '/icon/diamond_pickaxe.png' %}" height='30px'>
+                                <br><span>RESOURCES</span>
+                            </a>
+                        </div>
+                        <div id='menur' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-3'>
+                            <a class='nav-icon mx-auto col-4' href="{% url 'account' %}" target=''>
+                                <img src="{% static '/icon/nether_portal.gif' %}" height='30px'>
+                                <br><span>STUDENT</span>
+                            </a>
+                            <a class='nav-icon mx-auto col-4' href="{% url 'map' %}" target='_blank'>
+                                <img src="{% static '/icon/map.png' %}" height='30px'>
+                                <br><span>MAP</span>
+                            </a>
+                            <a class='nav-icon mx-auto col-4' href="cactus.html">
+                                <img src="{% static '/icon/cactus.png' %}" height='30px'>
+                                <br><span>CACTUS</span>
+                            </a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+            <div>
+                <div id="messages" class="position-top sticky-top">
+                    {% if messages %}
+                        <!-- <div class="p-1 text-center" id="err_msg">
+                            <div><strong>Error: {{error.type}}</strong> - {{error.msg}}</div>
+                            <div>Contact the course instructors if you believe there was a mistake.</div>
+                        </div> -->
+                        <!-- <div class="alert alert-primary alert-dismissible fade show" role="alert" style="margin-bottom: 0; text-align: center;">
+                            
+                        </div> -->
+                        {% for message in messages %}
+                            <div {% if message.tags %} class="{{ message.tags|get_alert_bsclass }}" {% endif %} 
+                                role="alert" 
+                                style="margin-bottom: 0; text-align: center; border-radius: 0;"
+                            >
+                                <div>
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
 
-            <div id="error" class="position-top">
+            <!-- <div id="error" class="position-top">
                 <div class="container" onclick='removeErr()'>
                     {% block error %}{% endblock %}
                 </div>
-            </div>
+            </div> -->
+            
 
-            <div id="info" class="position-top">
+            <!-- <div id="info" class="position-top">
                 <div class="container" onclick='removeErr()'>
                     {% block info %}{% endblock %}
                 </div>
-            </div>
+            </div> -->
         </div>
+
 
         <div id="home-img" class="text-center align-middle align-items-center p-5"
              style="background-image: url('{% static "/background/bg.png"%}')">
@@ -124,6 +155,8 @@
                     <a      class="p-1 m-1" href="https://www.cmu.edu/stuco/">About StuCo</a>
                     <div    class="p-1 m-1">|</div>
                     <a      class="p-1 m-1">Feedback</a>
+                    <div    class="p-1 m-1">|</div>
+                    <a      class="p-1 m-1">Bug Report</a>
                     <div    class="p-1 m-1">|</div>
                     <a      class="p-1 m-1">Source Code</a>
                 </div>

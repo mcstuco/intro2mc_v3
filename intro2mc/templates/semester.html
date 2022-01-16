@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Admin Panel
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'adminpanel-action' action='semester' %}" method="post">
+        <table>
+            {{form}}
+        </table>
+        {% csrf_token %}
+        <button type="submit">Submit</button>
+        <a href="{% url 'adminpanel' %}">Cancel</a>
+    </form>
+{% endblock %}
