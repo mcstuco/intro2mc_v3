@@ -1,7 +1,4 @@
-from django.http.response import HttpResponse, HttpResponseRedirect
-from django.template.loader import render_to_string
-from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.shortcuts import redirect
 
 from intro2mc.alerts import *
 from intro2mc.models import *

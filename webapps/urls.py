@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf import settings
-from django.conf.urls import handler404, include
+from django.conf.urls import include
 from django.contrib.auth.views import LogoutView
 from intro2mc import views
 

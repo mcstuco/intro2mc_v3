@@ -19,15 +19,6 @@
     </script>
 {% endblock %}
 
-{% block error %}
-    {% if error %}
-        <div class="p-1 text-center" id="err_msg">
-            <div><strong>Error: {{error.type}}</strong> - {{error.msg}}</div>
-            <div>Contact the course instructors if you believe there was a mistake.</div>
-        </div>
-    {% endif %}
-{% endblock %}
-
 {% block content %}
     {% if videos %}
         <div class="text-center my-3 p-3 bg-light content-box">

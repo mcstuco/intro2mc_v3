@@ -50,20 +50,6 @@
     text-decoration: none;
 }
 
-/* #error {
-    width: 100%;
-    color: white;
-    background-color: #E15050 !important;
-    background-color: #E34140 !important;
-}
-
-#info {
-    width: 100%;
-    color: white;
-    background-color: #007DDB !important;
-    background-color: #0071e3 !important;
-} */
-
 #messages {
     width: 100%;
 }
@@ -72,24 +58,6 @@
     width: 100% !important;
     margin-bottom: 0 !important;
 }
-
-/* #error:hover, #info:hover {
-    -webkit-filter: brightness(105%);
-    -moz-filter: brightness(105%);
-    -o-filter: brightness(105%);
-    -ms-filter: brightness(105%);
-    filter: brightness(105%);
-    cursor: pointer;
-    transition-duration: 0.2s;
-}
-
-#error:active, #info:active {
-    -webkit-filter: brightness(90%);
-    -moz-filter: brightness(90%);
-    -o-filter: brightness(90%);
-    -ms-filter: brightness(90%);
-    filter: brightness(90%);
-} */
 
 #home-img {
     width: 100%;
@@ -109,7 +77,6 @@ footer a:hover {
 }
 
 #content {
-    /* background-color: lightblue; */
     min-height: 100vh;
 }
 

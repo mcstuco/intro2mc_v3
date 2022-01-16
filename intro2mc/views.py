@@ -32,7 +32,6 @@ def home(request):
     if 'error' in request.session:
         messages.error(request, request.session["error"])
         del request.session["error"]
-        # context['error'] = get_and_remove_errors(request)
     
     context['videos'] = [{
         'videoURL': 'https://www.youtube.com/embed/QeaoV7ESihg'
@@ -42,7 +41,6 @@ def home(request):
     return render(request, 'index.html', context)
 
 def page_not_found(request, exception=None):
-    # save_error(request, page_not_found_err())
     messages.error(request, "This page does not exist.")
     return redirect('home')
 
@@ -68,7 +66,6 @@ def account(request):
         userinfo = fetch_userinfo(request)
     except Exception as e:
         logout(request)
-        # save_error(request, authencication_failed_err('Something went wrong, please log in again.'))
         messages.error(request, authencication_failed_err('Something went wrong, please log in again.'))
         return redirect('home')
 
@@ -100,7 +97,7 @@ def attendance(request, id=None):
         return render(request, 'attendance.html')
 
     if id is None:
-        save_error(request, access_denied_err())
+        messages.error(request, access_denied_err())
         return redirect('home')
 
     if cache.get('attendance_id') is None or cache.get('attendance_id') != id:
@@ -110,7 +107,7 @@ def attendance(request, id=None):
 def admin_panel(request, action=None):
     context = get_default_context()
     if not request.user.is_superuser:
-        save_error(request, access_denied_err())
+        messages.error(request, access_denied_err())
         return redirect('home')
 
     if action == 'semester':
