@@ -3,7 +3,7 @@ from django.db import models
 ######## Attendance ########
 class Student(models.Model):
     andrewID = models.CharField(max_length=200, primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, default='')
     picture = models.CharField(max_length=200)
     IGN = models.CharField(max_length=200)
 
@@ -39,10 +39,11 @@ class Singleton(models.Model):
         
 class AppConfig(Singleton):
     id = models.AutoField(primary_key=True)
-    syllabus = models.CharField(max_length=200)
-    mapURL = models.CharField(max_length=200)
     currSemester = models.CharField(max_length=200)
-    attendanceID = models.CharField(max_length=200)
+    syllabus = models.CharField(max_length=200)
+    serverMapURL = models.CharField(max_length=200)
+    # All andrew ids on the roster, separated by ','
+    roster = models.TextField(blank=True)
 
 ######## Website contents ########
 class Video(models.Model):

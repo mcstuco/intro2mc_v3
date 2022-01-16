@@ -16,14 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
-from django.conf.urls import include
+from django.conf.urls import handler404, include
 from django.contrib.auth.views import LogoutView
 from intro2mc import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('syllabus/', views.syllabus, name='syllabus'),
+    path('server-map/', views.map, name='map'),
     path('student-portal', views.account, name='account'),
     path('', include('social_django.urls', namespace='social')),
     path('logout/', LogoutView.as_view(template_name="index.html"), name='logout'),
+    path('attendance/', views.attendance, name='attendance'),
+    path('attendance/<str:id>', views.attendance),
+    path('admin-panel/', views.admin_panel, name="adminpanel"),
+    path('admin-panel/<str:action>', views.admin_panel, name="adminpanel-action"),
+    path('404', views.page_not_found, name='404')
 ]
+
+handler404 = 'intro2mc.views.page_not_found'

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Admin Panel
+{% endblock %}
+
+{% block content %}
+    <a href="{% url 'admin:index' %}">
+        <button>Django Admin</button>
+    </a>
+    <a href="{% url 'adminpanel-action' action='semester' %}">
+        <button>Semester Settings</button>
+    </a>
+{% endblock %}
