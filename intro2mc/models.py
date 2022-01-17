@@ -1,23 +1,5 @@
 from django.db import models
 
-######## Attendance ########
-class Student(models.Model):
-    andrewID = models.CharField(max_length=200, primary_key=True)
-    name = models.CharField(max_length=200, default='')
-    picture = models.CharField(max_length=200)
-    IGN = models.CharField(max_length=200)
-
-class ClassSession(models.Model):
-    id = models.AutoField(primary_key=True)
-    term = models.CharField(max_length=200)
-    date = models.DateTimeField()
-
-class Attendance(models.Model):
-    andrewID = models.CharField(max_length=200, primary_key=True)
-    term = models.CharField(max_length=200)
-    classSession = models.ForeignKey(ClassSession, on_delete=models.PROTECT)
-    excused = models.BooleanField(default=False)
-
 ######## Web app settings ########
 # Adapted from https://www.rootstrap.com/blog/simple-dynamic-settings-for-django/
 class Singleton(models.Model):
@@ -45,18 +27,42 @@ class AppConfig(Singleton):
     # All andrew ids on the roster, separated by ','
     roster = models.TextField(blank=True)
 
+class HasTimeStamps(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+######## Attendance ########
+class Student(HasTimeStamps):
+    andrewID = models.CharField(max_length=200, primary_key=True)
+    name = models.CharField(max_length=200, default='')
+    picture = models.CharField(max_length=200)
+    IGN = models.CharField(max_length=200)
+    uuid = models.CharField(max_length=200)
+
+class ClassSession(HasTimeStamps):
+    date = models.DateField(primary_key=True)
+    term = models.CharField(max_length=200)
+
+class Attendance(HasTimeStamps):
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Student, on_delete=models.PROTECT)
+    term = models.CharField(max_length=200)
+    classSession = models.ForeignKey(ClassSession, on_delete=models.PROTECT)
+    excused = models.BooleanField(default=False)
+
 ######## Website contents ########
-class Video(models.Model):
-    id = models.AutoField(primary_key=True)
-    videoURL = models.CharField(max_length=200)
+class Video(HasTimeStamps):
+    videoURL = models.CharField(max_length=200, primary_key=True)
     description = models.TextField(blank=True)
 
-class Meme(models.Model):
-    id = models.AutoField(primary_key=True)
-    imageURL = models.CharField(max_length=200)
+class Meme(HasTimeStamps):
+    imageURL = models.CharField(max_length=200, primary_key=True)
     description = models.TextField(blank=True)
 
-class Resource(models.Model):
+class Resource(HasTimeStamps):
     id = models.AutoField(primary_key=True)
     URL = models.CharField(max_length=200)
     imageURL = models.CharField(max_length=200)
