@@ -48,7 +48,7 @@ def register_ign(request):
     try:
         student = Student.objects.get(andrewID=request.user.username)
         form = StudentForm(instance=student)
-    except Exception as e: # expected
+    except Exception as e:
         try:
             userinfo = fetch_userinfo(request)
             student = Student(
@@ -148,7 +148,7 @@ def attendance(request, id=None):
         student = Student.objects.get(andrewID=request.user.username)
     except Exception as e:
         messages.error(request, generic_err("Unable to find student.", e))
-        return redirect('home')
+        return redirect('registeration')
     
     attendance, created = Attendance.objects.get_or_create(
         student=student,

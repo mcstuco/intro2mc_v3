@@ -76,7 +76,7 @@ footer a:hover {
     color: black;
 }
 
-#content {
+body {
     min-height: 100vh;
 }
 
@@ -86,4 +86,8 @@ footer a:hover {
 
 iframe {
     border-radius: 15px;
+}
+
+input {
+    background-color:transparent !important;
 }

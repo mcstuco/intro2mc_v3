@@ -6,10 +6,34 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Welcome, {{ student.name }} ({{ student.andrewID }})</h1>
-    <img src="{{ student.picture }}" alt="">
-    <div>Your IGN is <b>{{ student.IGN }}</b> <a href="{% url 'registration' %}">edit</a></div>
-    <a href="{% url 'logout' %}">
-        <button>Log out</button> 
-    </a>
+    <div class="text-center m-3 p-3 bg-light content-box">
+        <div class="h2 p-3">My Profile</div>
+        <div class="p-3">
+            <img src="{{ student.picture }}" alt="">
+            <div class="h4 my-1">{{ student.name }}</div>
+            <div class="text-muted">
+                Andrew ID: <span class="font-weight-bold">{{ student.andrewID }}</span>
+            </div>
+            <div class="text-muted">
+                IGN: <span class="font-weight-bold">{{ student.IGN }}</span>
+                <a href="{% url 'registration' %}" class="ml-1">edit</a>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col"></div>
+            <div class="col">
+                <a href="{% url 'attendance' %}" 
+                   type="button" 
+                   class="btn btn-primary btn-block my-2">
+                   Attendance
+                </a>
+                <a href="{% url 'logout' %}" 
+                   type="button" 
+                   class="btn btn-outline-secondary btn-block my-2">
+                   Log out
+                </a>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
 {% endblock %}

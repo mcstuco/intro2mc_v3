@@ -20,6 +20,21 @@
 {% endblock %}
 
 {% block content %}
+    <div class="text-center my-3 p-3 bg-light content-box">
+        <form action="https://minecraft.fandom.com/wiki/Special:Search"
+            method="get" target="_blank"
+            class="input-group border rounded-pill p-2 bg-white">
+            <input type="search" name="query"
+                placeholder="Search Minecraft Wiki..." 
+                class="form-control bg-none border-0 shadow-none">
+            <div class="input-group-append border-0">
+            <button type="submit" 
+                class="btn btn-outline-primary rounded-pill border-0 shadow-none">
+                <i class="fa fa-search"></i>
+            </button>
+            </div>
+        </form>
+    </div>
     {% if videos %}
         <div class="text-center my-3 p-3 bg-light content-box">
             <div class="h2 p-3">Videos</div>
