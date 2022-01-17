@@ -8,3 +8,6 @@ def authencication_failed_err(msg="Could not authenticate your account."):
 
 def page_not_found_err(msg="This page does not exist."):
     return ' '.join([msg, contact_instructors_txt])
+
+def generic_err(msg="Something went wrong.", desc="unknown error"):
+    return ' '.join([msg, f"[{desc}]", contact_instructors_txt])

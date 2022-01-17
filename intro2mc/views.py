@@ -1,8 +1,10 @@
+from xml.etree.ElementInclude import include
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.core.cache import cache
 from django.contrib import messages
+from django.utils import timezone
 
 import requests
 import logging
@@ -22,10 +24,6 @@ GOOGLE_DISCOVERY_URL = (
 USERINFO_ENDPOINT_KEY = "userinfo_endpoint"
 
 logger = logging.getLogger(__name__)
-
-def get_default_context():
-    context = {}
-    return context
 
 def home(request):
     context = get_default_context()
@@ -74,36 +72,27 @@ def account(request):
     context['userinfo'] = userinfo
     return render(request, 'account.html', context)
 
-def fetch_userinfo(request):
-    social = request.user.social_auth.get(provider='google-oauth2')
-    access_token = social.extra_data['access_token']
-    
-    google_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
-    userinfo_endpoint = google_cfg[USERINFO_ENDPOINT_KEY]
-    
-    response = requests.get(userinfo_endpoint, params={'access_token': access_token}).json()
-    logger.info(msg=response)
-    if 'error' in response:
-        raise Exception(response.get('error'))
-
-    userinfo = {
-        'first_name': response.get('given_name'),
-        'andrew_id': request.user.username,
-        'picture': response.get('picture'),
-    }
-    return userinfo
-
 @login_required()
 def attendance(request, id=None):
     context = get_default_context()
     id_key = 'attendance_id'
+    cfg = AppConfig().load()
+    today = timezone.now().date()
     if request.user.is_superuser:
+        sess, _ = ClassSession.objects.get_or_create(
+            term=cfg.currSemester, 
+            date=today
+        )
+        sess.save()
+
         if cache.get(id_key) is None:
             id = str(uuid.uuid4())
             cache.set(id_key, id)
         else:
             id = cache.get(id_key)
+
         print(cache.get(id_key))
+
         qr_code = generate_qrcode(request.build_absolute_uri(f"/attendance/{id}"))
         context["svg"] = qr_code
         return render(request, 'attendance.html', context)
@@ -111,9 +100,31 @@ def attendance(request, id=None):
     if id is None:
         messages.error(request, access_denied_err())
         return redirect('home')
-
-    if cache.get(id_key) is None or cache.get(id_key) != id:
+    if cache.get(id_key) != id:
         return redirect('404')
+    
+    try:
+        sess = ClassSession.objects.get(
+            term=cfg.currSemester, 
+            date=today
+        )
+    except Exception as e:
+        messages.error(request, generic_err("Unable to find a class session for today.", e))
+        return redirect('home')
+    
+    try:
+        student = Student.objects.get(andrewID=request.user.username)
+    except Exception as e:
+        messages.error(request, generic_err("Unable to find student.", e))
+        return redirect('home')
+
+    attendance, _ = Attendance.objects.get_or_create(
+        student=student,
+        term=cfg.currentSemester,
+        classSession=sess
+    )
+    attendance.save()
+    
     return render(request, 'attendance.html')
 
 @login_required()
@@ -137,6 +148,31 @@ def admin_panel(request, action=None):
 
 
     return render(request, 'admin-panel.html', context)
+
+########### util methods ###########
+def get_default_context():
+    context = {}
+    return context
+
+def fetch_userinfo(request):
+    social = request.user.social_auth.get(provider='google-oauth2')
+    access_token = social.extra_data['access_token']
+    
+    google_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
+    userinfo_endpoint = google_cfg[USERINFO_ENDPOINT_KEY]
+    
+    response = requests.get(userinfo_endpoint, params={'access_token': access_token}).json()
+    logger.info(msg=response)
+    if 'error' in response:
+        raise Exception(response.get('error'))
+
+    userinfo = {
+        'first_name': response.get('given_name'),
+        'andrew_id': request.user.username,
+        'picture': response.get('picture'),
+    }
+    return userinfo
+
 
 def generate_qrcode(url, size=30):
     img = qrcode.make(url, 
