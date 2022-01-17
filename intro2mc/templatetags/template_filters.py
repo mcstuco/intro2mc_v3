@@ -3,6 +3,7 @@ from django import template
 register = template.Library()
 
 @register.filter
+# Returns bootstrap classes for a django message tag
 def get_alert_bsclass(tag):
     alert_bsclass = {
         "error": "alert alert-danger alert-dismissible show",

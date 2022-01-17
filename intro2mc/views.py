@@ -6,6 +6,7 @@ from django.contrib import messages
 
 import requests
 import logging
+import uuid
 
 from intro2mc.alerts import *
 from intro2mc.forms import *
@@ -36,8 +37,9 @@ def home(request):
     context['videos'] = [{
         'videoURL': 'https://www.youtube.com/embed/QeaoV7ESihg'
     }] * 10
-    messages.error(request, 'test')
-    messages.info(request, 'test')
+
+    messages.info(request, 'This website is still under development. Let us know if you found any bugs')
+
     return render(request, 'index.html', context)
 
 def page_not_found(request, exception=None):
@@ -46,13 +48,13 @@ def page_not_found(request, exception=None):
 
 def syllabus(request):
     cfg = AppConfig().load()
-    if cfg.syllabus is not None and cfg.syllabus is not '':
+    if cfg.syllabus is not None and cfg.syllabus != '':
         return redirect(cfg.syllabus)
     return redirect('home')
 
 def map(request):
     cfg = AppConfig().load()
-    if cfg.serverMapURL is not None and cfg.serverMapURL is not '':
+    if cfg.serverMapURL is not None and cfg.serverMapURL != '':
         return redirect(cfg.serverMapURL)
     return redirect('home')
 
@@ -93,15 +95,26 @@ def fetch_userinfo(request):
 
 @login_required()
 def attendance(request, id=None):
+    context = get_default_context()
+    id_key = 'attendance_id'
     if request.user.is_superuser:
-        return render(request, 'attendance.html')
+        if cache.get(id_key) is None:
+            id = str(uuid.uuid4())
+            cache.set(id_key, id)
+        else:
+            id = cache.get(id_key)
+        print(cache.get(id_key))
+        qr_code = generate_qrcode(request.build_absolute_uri(f"/attendance/{id}"))
+        context["svg"] = qr_code
+        return render(request, 'attendance.html', context)
 
     if id is None:
         messages.error(request, access_denied_err())
         return redirect('home')
 
-    if cache.get('attendance_id') is None or cache.get('attendance_id') != id:
+    if cache.get(id_key) is None or cache.get(id_key) != id:
         return redirect('404')
+    return render(request, 'attendance.html')
 
 @login_required()
 def admin_panel(request, action=None):
@@ -125,7 +138,7 @@ def admin_panel(request, action=None):
 
     return render(request, 'admin-panel.html', context)
 
-def generate_qrcode(url, size=20):
+def generate_qrcode(url, size=30):
     img = qrcode.make(url, 
                       image_factory=qrcode.image.svg.SvgImage, 
                       box_size=size)

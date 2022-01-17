@@ -4,3 +4,15 @@
 {% block title %}
     Attendance
 {% endblock %}
+
+{% block content %}
+    {% if user.is_superuser %}
+        <div class="mt-5 h1">
+            Scan the QR Code to Sign in
+        </div>
+        <div class="text-center">
+            {{ svg|safe }}
+        </div>
+    {% else %}
+    {% endif %}
+{% endblock %}
