@@ -17,3 +17,8 @@ class AppCfgForm(forms.ModelForm):
    
     def clean_currSemester(self):
         return self.cleaned_data['currSemester'].lower()
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = models.Student
+        fields = ['IGN']

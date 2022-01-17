@@ -23,6 +23,8 @@ GOOGLE_DISCOVERY_URL = (
 )
 USERINFO_ENDPOINT_KEY = "userinfo_endpoint"
 
+STATUS_NO_CONTENT = 204
+
 logger = logging.getLogger(__name__)
 
 def home(request):
@@ -39,6 +41,42 @@ def home(request):
     messages.info(request, 'This website is still under development. Let us know if you found any bugs')
 
     return render(request, 'index.html', context)
+
+@login_required
+def register_ign(request):
+    context = get_default_context()
+    try:
+        student = Student.objects.get(andrewID=request.user.username)
+        form = StudentForm(instance=student)
+    except Exception as e: # expected
+        try:
+            userinfo = fetch_userinfo(request)
+            student = Student(
+                andrewID=userinfo["andrew_id"],
+                name=userinfo["first_name"],
+                picture=userinfo["picture"],
+            )
+            form = StudentForm()
+        except Exception as e:
+            logout(request)
+            messages.error(request, authencication_failed_err('Something went wrong, please log in again.'))
+            return redirect('home')
+
+    context["student"] = student
+    context['form'] = form
+    if request.method == 'POST':           
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            student.IGN = form["IGN"].value()
+            student.save()
+            messages.success(request, 'Your in-game name is successfully registered.')
+            return redirect('account')
+        else:
+            messages.error(request, 'Registration failed')
+            context['form'] = form
+            return render(request, 'registration.html', context)
+
+    return render(request, 'registration.html', context)
 
 def page_not_found(request, exception=None):
     messages.error(request, "This page does not exist.")
@@ -63,13 +101,11 @@ def account(request):
         return redirect('adminpanel')
 
     try:
-        userinfo = fetch_userinfo(request)
+        student = Student.objects.get(andrewID=request.user.username)
     except Exception as e:
-        logout(request)
-        messages.error(request, authencication_failed_err('Something went wrong, please log in again.'))
-        return redirect('home')
+        return redirect('registration')
 
-    context['userinfo'] = userinfo
+    context['student'] = student
     return render(request, 'account.html', context)
 
 @login_required()
@@ -85,12 +121,8 @@ def attendance(request, id=None):
         )
         sess.save()
 
-        if cache.get(id_key) is None:
-            id = str(uuid.uuid4())
-            cache.set(id_key, id)
-        else:
-            id = cache.get(id_key)
-
+        id = str(uuid.uuid4())
+        cache.set(id_key, id)
         print(cache.get(id_key))
 
         qr_code = generate_qrcode(request.build_absolute_uri(f"/attendance/{id}"))
@@ -146,7 +178,6 @@ def admin_panel(request, action=None):
             context['form'] = form
         return render(request, 'semester.html', context)
 
-
     return render(request, 'admin-panel.html', context)
 
 ########### util methods ###########
@@ -173,6 +204,16 @@ def fetch_userinfo(request):
     }
     return userinfo
 
+def fetch_uuid(ign):
+    response = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{ign}")
+    if response.status_code == STATUS_NO_CONTENT:
+        raise Exception('Unable to retrieve uuid for this username')
+
+    response_json = response.json()
+    if 'error' in response_json:
+        raise Exception(response_json.get('error'))
+
+    return response_json.get('id')
 
 def generate_qrcode(url, size=30):
     img = qrcode.make(url, 

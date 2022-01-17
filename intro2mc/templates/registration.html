@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Registration
+{% endblock %}
+
+{% block content %}
+    <h1>Welcome, {{ student.name }} ({{ student.andrewID }})</h1>
+    <img src="{{ student.picture }}" alt="">
+    <h1>Register your in-game name (IGN) here</h1>
+    <div class="text-muted">
+        Note that Minecraft usernames are case-sensitive. 
+        Please double check that the spelling and capitalization are correct.
+    </div>
+
+    <form action="{% url 'registration' %}" method="post">
+        <table>
+            {{form}}
+        </table>
+        {% csrf_token %}
+        {% if form.IGN.value %}
+            <a href="{% url 'account' %}">Cancel</a>
+        {% endif %}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
