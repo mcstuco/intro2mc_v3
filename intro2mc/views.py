@@ -38,11 +38,11 @@ def home(request):
         'videoURL': 'https://www.youtube.com/embed/QeaoV7ESihg'
     }] * 10
 
-    messages.info(request, 'This website is still under development. Let us know if you found any bugs')
+    messages.info(request, 'This website is still in development. Let us know if you found any bugs')
 
     return render(request, 'index.html', context)
 
-@login_required
+@login_required()
 def register_ign(request):
     context = get_default_context()
     try:
@@ -69,7 +69,7 @@ def register_ign(request):
         if form.is_valid():
             student.IGN = form["IGN"].value()
             student.save()
-            messages.success(request, 'Your in-game name is successfully registered.')
+            messages.success(request, 'Your in-game name has been successfully registered.')
             return redirect('account')
         else:
             messages.error(request, 'Registration failed')
@@ -94,7 +94,7 @@ def map(request):
         return redirect(cfg.serverMapURL)
     return redirect('home')
 
-@login_required
+@login_required()
 def account(request):
     context = get_default_context()
     if request.user.is_superuser:
@@ -149,15 +149,19 @@ def attendance(request, id=None):
     except Exception as e:
         messages.error(request, generic_err("Unable to find student.", e))
         return redirect('home')
-
-    attendance, _ = Attendance.objects.get_or_create(
+    
+    attendance, created = Attendance.objects.get_or_create(
         student=student,
-        term=cfg.currentSemester,
+        term=cfg.currSemester,
         classSession=sess
     )
-    attendance.save()
-    
-    return render(request, 'attendance.html')
+    if created:
+        attendance.save()
+        messages.success(request, 'Your attendance has been recorded.')
+    else:
+        messages.warning(request, 'You have already signed in.')
+
+    return redirect('account')
 
 @login_required()
 def admin_panel(request, action=None):

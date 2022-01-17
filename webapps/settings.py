@@ -85,7 +85,7 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = KEY_CONFIG.get('GoogleOAuth2', 'key')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = KEY_CONFIG.get('GoogleOAuth2', 'secret')
 
-LOGIN_URL = 'login/google-oauth2/'
+LOGIN_URL = '/login/google-oauth2/'
 LOGIN_REDIRECT_URL = '/student-portal'
 LOGOUT_REDIRECT_URL = '/'
 
