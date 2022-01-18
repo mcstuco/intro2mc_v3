@@ -70,7 +70,13 @@
                         <div id='menur' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-3'>
                             <a class='nav-icon mx-auto col-4' href="{% url 'account' %}" target=''>
                                 <img src="{% static '/icon/nether_portal.gif' %}" height='30px'>
-                                <br><span>STUDENT</span>
+                                <br><span>
+                                    {% if user.is_superuser %}
+                                        ADMIN
+                                    {% else %}
+                                        STUDENT
+                                    {% endif %}
+                                </span>
                             </a>
                             <a class='nav-icon mx-auto col-4' href="{% url 'map' %}" target='_blank'>
                                 <img src="{% static '/icon/map.png' %}" height='30px'>
