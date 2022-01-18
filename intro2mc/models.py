@@ -43,9 +43,15 @@ class Student(HasTimeStamps):
     IGN = models.CharField(max_length=200)
     uuid = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.andrewID
+
 class ClassSession(HasTimeStamps):
     date = models.DateField(primary_key=True)
     term = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'{self.term}-{self.date}'
 
 class Attendance(HasTimeStamps):
     id = models.AutoField(primary_key=True)
@@ -53,6 +59,9 @@ class Attendance(HasTimeStamps):
     term = models.CharField(max_length=200)
     classSession = models.ForeignKey(ClassSession, on_delete=models.PROTECT)
     excused = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.student} {self.classSession}'
 
 ######## Website contents ########
 class Video(HasTimeStamps):
