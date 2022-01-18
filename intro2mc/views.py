@@ -85,6 +85,7 @@ def syllabus(request):
         return redirect(cfg.syllabus)
     return redirect('home')
 
+@login_required()
 def map(request):
     cfg = AppConfig().load()
     if cfg.serverMapURL is not None and cfg.serverMapURL != '':
@@ -112,11 +113,13 @@ def attendance(request, id=None):
     cfg = AppConfig().load()
     today = timezone.now().date()
     if request.user.is_superuser:
-        sess, _ = ClassSession.objects.get_or_create(
+        sess, created = ClassSession.objects.get_or_create(
             term=cfg.currSemester, 
             date=today
         )
         sess.save()
+
+        if created: messages.info(request, 'New class session created.')
 
         id = str(uuid.uuid4())
         cache.set(id_key, id)
