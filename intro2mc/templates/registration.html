@@ -6,22 +6,47 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Welcome, {{ student.name }} ({{ student.andrewID }})</h1>
-    <img src="{{ student.picture }}" alt="">
-    <h1>Register your in-game name (IGN) here</h1>
-    <div class="text-muted">
-        Note that Minecraft usernames are case-sensitive. 
-        Please double check that the spelling and capitalization are correct.
-    </div>
+    <div class="text-center my-3 p-3 bg-light content-box">
+        <div class="p-3">
+            <div class="h2">Welcome, {{ student.name }} ({{ student.andrewID }})</div>
+            <div class="text-muted">
+                Not you? 
+                <u><a class="text-muted" href="{% url 'logout' %}">Log out</a></u>
+            </div>
+        </div>
+        <div class="my-4">
+            <div class="my-2">
+                <span class="h5">Enter your Minecraft IGN* here </span>
+            </div>
+            <form action="{% url 'registration' %}" 
+                method="post" class="my-4">
+                <div class="m-4">
+                    <div class="d-flex justify-content-center">
+                        <input type="text" class="form-control w-50 bg-white"
+                            name="{{ form.IGN.name }}"
+                            id="id_{{ form.IGN.name }}"
+                            placeholder="{{ student.IGN }}" 
+                            autofocus onClick="this.select();"> 
+                    </div>
+                    {% for err in form.IGN.errors %}
+                        <div class="text-danger m-2">{{ err|escape }}</div>
+                    {% endfor %}
+                </div>
 
-    <form action="{% url 'registration' %}" method="post">
-        <table>
-            {{form}}
-        </table>
-        {% csrf_token %}
-        {% if form.IGN.value %}
-            <a href="{% url 'account' %}">Cancel</a>
-        {% endif %}
-        <button type="submit">Submit</button>
-    </form>
+                {% csrf_token %}
+                {% if student.IGN %}
+                    <a class="btn btn-link mx-2" href="{% url 'account' %}">Cancel</a>
+                {% endif %}
+                <button type="submit" class="btn btn-primary mx-2">Submit</button>
+            </form>
+        </div>
+        <div class="text-muted font-weight-light m-4">
+            * Minecraft usernames (IGNs) are case-sensitive, 
+            so please double check that the spelling and capitalization are correct. 
+            Go to your Minecraft 
+            <u><a class="text-muted" href="https://www.minecraft.net/en-us/profile" target="_blank">profile page</a></u> 
+            to find or change your username.
+        </div>
+    </div>
+    
 {% endblock %}

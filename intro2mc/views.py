@@ -34,9 +34,7 @@ def home(request):
         messages.error(request, request.session["error"])
         del request.session["error"]
     
-    context['videos'] = [{
-        'videoURL': 'https://www.youtube.com/embed/QeaoV7ESihg'
-    }] * 10
+    context['videos'] = Video.objects.all()
 
     messages.info(request, 'This website is still in development. Let us know if you found any bugs')
 
@@ -67,12 +65,11 @@ def register_ign(request):
     if request.method == 'POST':           
         form = StudentForm(request.POST)
         if form.is_valid():
-            student.IGN = form["IGN"].value()
+            student.IGN = form.cleaned_data["IGN"]
             student.save()
             messages.success(request, 'Your in-game name has been successfully registered.')
             return redirect('account')
         else:
-            messages.error(request, 'Registration failed')
             context['form'] = form
             return render(request, 'registration.html', context)
 
