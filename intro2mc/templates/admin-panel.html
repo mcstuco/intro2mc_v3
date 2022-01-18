@@ -12,7 +12,13 @@
     <a href="{% url 'adminpanel-action' action='semester' %}">
         <button>Semester Settings</button>
     </a>
+    <a href="{% url 'adminpanel-action' action='whitelist' %}">
+        <button>Whitelist All</button>
+    </a>
     <a href="{% url 'attendance' %}">
         <button>Attendance</button>
+    </a>
+    <a href="{% url 'logout' %}">
+        <button>Log out</button>
     </a>
 {% endblock %}

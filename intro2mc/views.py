@@ -1,14 +1,16 @@
-from xml.etree.ElementInclude import include
+import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.core.cache import cache
 from django.contrib import messages
 from django.utils import timezone
+from django.conf import settings
 
 import requests
 import logging
 import uuid
+import os
 
 from intro2mc.alerts import *
 from intro2mc.forms import *
@@ -186,6 +188,32 @@ def admin_panel(request, action=None):
             form = AppCfgForm(instance=cfg)
             context['form'] = form
         return render(request, 'semester.html', context)
+    
+    if action == 'whitelist':
+        roster = get_roster()
+        wl_file = os.path.join(settings.SERVER_DIR, 'whitelist.json')
+        with open(wl_file, 'r') as f: whitelist = json.load(f)
+
+        for s in Student.objects.all():
+            if s.andrewID in roster:
+                print(s.uuid)
+                if s.uuid == None or s.uuid == '':
+                    try:
+                        uid = fetch_uuid(s.IGN)
+                    except Exception as e:
+                        messages.error(request, ' '.join([str(e), s.IGN]))
+                    else:
+                        s.uuid = f'{uid[0:8]}-{uid[8:12]}-{uid[12:16]}-{uid[16:20]}-{uid[20:32]}'
+                        s.save()
+                if not any(d['uuid'] == s.uuid for d in whitelist):
+                    whitelist.append({
+                        'uuid': s.uuid,
+                        'name': s.IGN,
+                    })
+
+        with open(wl_file, 'w') as f: json.dump(whitelist, f, indent=2)
+ 
+        return render(request, 'admin-panel.html', context)
 
     return render(request, 'admin-panel.html', context)
 
@@ -193,6 +221,10 @@ def admin_panel(request, action=None):
 def get_default_context():
     context = {}
     return context
+
+def get_roster():
+    cfg = AppConfig.load()
+    return set(filter(None, cfg.roster.split(',')))
 
 def fetch_userinfo(request):
     social = request.user.social_auth.get(provider='google-oauth2')
