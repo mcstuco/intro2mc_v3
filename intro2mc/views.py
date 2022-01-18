@@ -103,7 +103,12 @@ def account(request):
     except Exception as e:
         return redirect('registration')
 
+    cfg = AppConfig().load()
+
     context['student'] = student
+    context['server'] = {
+        'address': cfg.serverAddress
+    }
     return render(request, 'account.html', context)
 
 @login_required()

@@ -34,4 +34,13 @@
             </div>
         </div>
     </div>
+    {% if server %}
+        <div class="text-center m-3 p-3 bg-light content-box">
+            <div class="h2 p-3">Server Details</div>
+            <div class="pb-3">
+                <div class="h5">Address</div>
+                <div>{{ server.address }}</div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

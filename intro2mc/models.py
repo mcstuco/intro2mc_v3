@@ -24,6 +24,7 @@ class AppConfig(Singleton):
     currSemester = models.CharField(max_length=200)
     syllabus = models.CharField(max_length=200)
     serverMapURL = models.CharField(max_length=200)
+    serverAddress = models.CharField(max_length=200)
     # All andrew ids on the roster, separated by ','
     roster = models.TextField(blank=True)
 
