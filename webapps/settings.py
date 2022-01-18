@@ -159,4 +159,4 @@ STATIC_URL = '/static/'
 
 # Absolute path to server files
 
-SERVER_DIR = '/home/ubuntu/servers'
+SERVER_DIR = '/home/ubuntu/servers/survival'
