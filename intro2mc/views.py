@@ -153,7 +153,7 @@ def attendance(request, id=None):
         student = Student.objects.get(andrewID=request.user.username)
     except Exception as e:
         messages.error(request, generic_err("Unable to find student.", e))
-        return redirect('registeration')
+        return redirect('registration')
     
     attendance, created = Attendance.objects.get_or_create(
         student=student,
