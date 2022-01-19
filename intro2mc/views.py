@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -7,18 +6,18 @@ from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
 
+from io import BytesIO
 import requests
 import logging
 import uuid
 import os
+import json
+import qrcode
+import qrcode.image.svg
 
 from intro2mc.alerts import *
 from intro2mc.forms import *
 from intro2mc.models import *
-
-import qrcode
-import qrcode.image.svg
-from io import BytesIO
 
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
@@ -128,12 +127,15 @@ def attendance(request, id=None):
 
         if created: messages.info(request, 'New class session created.')
 
-        id = str(uuid.uuid4())
-        cache.set(id_key, id)
-        print(cache.get(id_key))
+        id = cache.get(id_key)
+        if id == None:
+            id = str(uuid.uuid4())
+            cache.set(id_key, id)
 
-        qr_code = generate_qrcode(request.build_absolute_uri(f"/attendance/{id}"))
+        url = request.build_absolute_uri(f"/attendance/{id}")
+        qr_code = generate_qrcode(url)
         context["svg"] = qr_code
+        context["url"] = url
         return render(request, 'attendance.html', context)
 
     if id is None:
@@ -194,26 +196,29 @@ def admin_panel(request, action=None):
         wl_file = os.path.join(settings.SERVER_DIR, 'whitelist.json')
         with open(wl_file, 'r') as f: whitelist = json.load(f)
 
+        count = 0
         for s in Student.objects.all():
             if s.andrewID in roster:
-                print(s.uuid)
                 if s.uuid == None or s.uuid == '':
                     try:
-                        uid = fetch_uuid(s.IGN)
+                        id = fetch_uuid(s.IGN)
                     except Exception as e:
-                        messages.error(request, ' '.join([str(e), s.IGN]))
+                        messages.error(request, f'Error fetching uuid for {s.andrewID} ({s.IGN}) [{str(e)}]')
                     else:
-                        s.uuid = f'{uid[0:8]}-{uid[8:12]}-{uid[12:16]}-{uid[16:20]}-{uid[20:32]}'
+                        s.uuid = str(uuid.UUID(id))
                         s.save()
                 if not any(d['uuid'] == s.uuid for d in whitelist):
+                    count += 1
                     whitelist.append({
                         'uuid': s.uuid,
                         'name': s.IGN,
                     })
 
         with open(wl_file, 'w') as f: json.dump(whitelist, f, indent=2)
+
+        messages.info(request, f'Added {count} people to the server whitelist')
  
-        return render(request, 'admin-panel.html', context)
+        return redirect('adminpanel')
 
     return render(request, 'admin-panel.html', context)
 

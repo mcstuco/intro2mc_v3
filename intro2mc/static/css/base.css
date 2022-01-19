@@ -91,3 +91,7 @@ iframe {
 input {
     background-color:transparent !important;
 }
+
+.hover-border-lightgrey:hover {
+    border-color: lightgrey !important;
+}
