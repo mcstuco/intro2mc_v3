@@ -20,7 +20,7 @@ def auth_allowed(backend, details, response, *args, **kwargs):
     roster = list(filter(None, cfg.roster.split(',')))
     if username not in roster:
         error = access_denied_err(
-            f"User {username} is not registered in the system."
+            f"User {username} is not registered in the course system."
         )
 
         backend.strategy.session_set('error', error)

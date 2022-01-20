@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.conf import settings
 
 from io import BytesIO
+from mcstatus import MinecraftServer
 import requests
 import logging
 import uuid
@@ -106,9 +107,18 @@ def account(request):
 
     cfg = AppConfig().load()
 
+    try:
+        server = MinecraftServer.lookup(cfg.serverAddress)
+        status = server.status()
+        players = status.players.online
+    except Exception as e:
+        print(e)
+        players = None
+
     context['student'] = student
     context['server'] = {
-        'address': cfg.serverAddress
+        'address': cfg.serverAddress,
+        'players': players,
     }
     return render(request, 'account.html', context)
 

@@ -5,6 +5,29 @@
     Student Portal
 {% endblock %}
 
+{% block script %}
+    <script>
+        function copy() {
+            navigator.clipboard.writeText("{{ server.address }}")
+        }
+        $(document).ready(function(){
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            })
+            $('[data-toggle="popover"]').popover()
+        });
+    </script>
+{% endblock %}
+
+{% block style %}
+    <style>
+        i:hover {
+            cursor: pointer;
+            color: black !important;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div class="text-center m-3 p-3 bg-light content-box">
         <div class="h2 p-3">My Profile</div>
@@ -38,8 +61,22 @@
         <div class="text-center m-3 p-3 bg-light content-box">
             <div class="h2 p-3">Server Details</div>
             <div class="pb-3">
-                <div class="h5">Address</div>
-                <div>{{ server.address }}</div>
+                <div class="h5">IP Address</div>
+                <div>
+                    {{ server.address }} <a tabindex="0" id="copy" data-trigger="focus" onClick="copy()" data-toggle="popover" data-content="Copied to clipboard!">
+                        <i class="far fa-copy text-muted ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="pb-3">
+                <div class="h5">Status</div>
+                {% if server.players %}
+                    <div class="text-success text-uppercase font-weight-bold">running</div>
+                    <div class="text-muted">{{ server.players }} player{% if server.players > 1 %}s{% endif %} online</div>
+                {% else %}
+                    <div class="text-danger text-uppercase font-weight-bold">offline</div>
+                    <div class="text-muted">We might be running server maintenance. Please try again later. Contact us if this issue persists.</div>
+                {% endif %}
             </div>
         </div>
     {% endif %}
