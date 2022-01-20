@@ -70,7 +70,7 @@
             </div>
             <div class="pb-3">
                 <div class="h5">Status</div>
-                {% if server.players %}
+                {% if server.players != None %}
                     <div class="text-success text-uppercase font-weight-bold">running</div>
                     <div class="text-muted">{{ server.players }} player{% if server.players > 1 %}s{% endif %} online</div>
                 {% else %}
