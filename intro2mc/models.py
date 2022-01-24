@@ -78,3 +78,19 @@ class Resource(HasTimeStamps):
     imageURL = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+
+######## Assignments ########
+class Assignment(HasTimeStamps):
+    id = models.AutoField(primary_key=True)
+    term = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    userSubmittable = models.BooleanField(default=False)
+    gradeReleased = models.BooleanField(default=False)
+
+class Submission(HasTimeStamps):
+    id = models.AutoField(primary_key=True)
+    assignment = models.ForeignKey(Assignment, on_delete=models.PROTECT)
+    student = models.ForeignKey(Student, on_delete=models.PROTECT)
+    details = models.TextField(blank=True)
+    grade = models.CharField(max_length=1, default='U')

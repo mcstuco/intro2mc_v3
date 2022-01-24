@@ -38,6 +38,18 @@ class VideoAdmin(admin.ModelAdmin):
     class Meta:
         model = Video
 
+class AssignmentAdmin(admin.ModelAdmin):
+    fields = [field.name for field in Assignment._meta.concrete_fields]
+    readonly_fields = ['id', 'created_at', 'updated_at']
+    class Meta:
+        model = Assignment
+
+class SubmissionAdmin(admin.ModelAdmin):
+    fields = [field.name for field in Submission._meta.concrete_fields]
+    readonly_fields = ['id', 'created_at', 'updated_at']
+    class Meta:
+        model = Submission
+
 admin.site.register(AppConfig)
 admin.site.register(Attendance, AttendanceAdmin)
 admin.site.register(ClassSession, ClassSessionAdmin)
@@ -45,3 +57,5 @@ admin.site.register(Meme, MemeAdmin)
 admin.site.register(Resource, ResourceAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Video, VideoAdmin)
+admin.site.register(Assignment, AssignmentAdmin)
+admin.site.register(Submission, SubmissionAdmin)
