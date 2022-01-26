@@ -44,7 +44,7 @@ class Student(HasTimeStamps):
     uuid = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.andrewID
+        return f'{self.andrewID} [{self.IGN}]'
 
 class ClassSession(HasTimeStamps):
     date = models.DateField(primary_key=True)

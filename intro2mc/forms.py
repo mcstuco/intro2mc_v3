@@ -12,8 +12,8 @@ class AppCfgForm(forms.ModelForm):
     
     def clean_roster(self):
         data = self.cleaned_data['roster'].lower()
-        roster = ','.join(re.findall(r'\w+', data))
-        return roster
+        roster = set(re.findall(r'\w+', data))
+        return ','.join(roster)
    
     def clean_currSemester(self):
         return self.cleaned_data['currSemester'].lower()
