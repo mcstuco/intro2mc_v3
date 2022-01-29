@@ -63,9 +63,10 @@
             <div class="pb-3">
                 <div class="h5">IP Address</div>
                 <div>
-                    {{ server.address }} <a class="ml-2" tabindex="0" id="copy" data-trigger="focus" onClick="copy()" data-toggle="popover" data-content="Copied to clipboard!">
+                    {{ server.address }} 
+                    {% comment %} <a class="ml-2" tabindex="0" id="copy" data-trigger="focus" onClick="copy()" data-toggle="popover" data-content="Copied to clipboard!">
                         <i class="far fa-copy text-muted"></i>
-                    </a>
+                    </a> {% endcomment %}
                 </div>
             </div>
             <div class="pb-3">
