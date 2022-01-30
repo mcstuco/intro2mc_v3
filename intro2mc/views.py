@@ -127,7 +127,7 @@ def attendance(request, id=None):
     context = get_default_context()
     id_key = 'attendance_id'
     cfg = AppConfig().load()
-    today = timezone.now().date()
+    today = timezone.localtime(timezone.now()).date()
     if request.user.is_superuser:
         sess, created = ClassSession.objects.get_or_create(
             term=cfg.currSemester, 
@@ -148,11 +148,44 @@ def attendance(request, id=None):
         context["url"] = url
         return render(request, 'attendance.html', context)
 
+    try:
+        student = Student.objects.get(andrewID=request.user.username)
+    except Exception as e:
+        messages.error(request, generic_err("Unable to find student.", e))
+        return redirect('registration')
+
     if id is None:
-        messages.error(request, access_denied_err())
-        return redirect('home')
-    if cache.get(id_key) != id:
-        return redirect('404')
+        sessions = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
+        classes = []
+        absences = 0
+        for s in sessions:
+            # check if class is on Tuesday
+            if s.date.weekday() != 1: continue
+            cls = {'date': str(s.date)}
+            try:
+                att = Attendance.objects.get(student=student, term=cfg.currSemester, classSession=s)
+                if att.excused: cls['status'] = 'Excused'
+                else: cls['status'] = 'Present'
+            except Exception as e:
+                if s.date < student.created_at.date(): cls['status'] = 'N/A'
+                else: 
+                    cls['status'] = 'Absent'
+                    absences += 1
+            classes.append(cls)
+
+        context = {
+            'student': student,
+            'classes': classes,
+            'absences': absences,
+        }
+        
+        print(classes)
+        return render(request, 'attendance.html', context)
+
+        # messages.error(request, access_denied_err())
+        # return redirect('home')
+
+    if cache.get(id_key) != id: return redirect('404')
     
     try:
         sess = ClassSession.objects.get(
@@ -162,12 +195,7 @@ def attendance(request, id=None):
     except Exception as e:
         messages.error(request, generic_err("Unable to find a class session for today.", e))
         return redirect('home')
-    
-    try:
-        student = Student.objects.get(andrewID=request.user.username)
-    except Exception as e:
-        messages.error(request, generic_err("Unable to find student.", e))
-        return redirect('registration')
+
     
     attendance, created = Attendance.objects.get_or_create(
         student=student,

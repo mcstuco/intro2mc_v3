@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load template_filters %}
 
 {% block title %}
     Attendance
@@ -7,6 +8,11 @@
 
 {% block content %}
     {% if user.is_superuser %}
+        <div class="m-3 text-left">
+            <a class="btn btn-link" href="{% url 'account' %}" >
+                <i class="fas fa-angle-left"></i> Back
+            </a>
+        </div>
         <div class="mt-5 h1">
             Scan the QR Code to Sign in
         </div>
@@ -20,5 +26,49 @@
             {{ url }}
         </div>
     {% else %}
+        <div class="m-3 text-left">
+            <a class="btn btn-link" href="{% url 'account' %}" >
+                <i class="fas fa-angle-left"></i> Back
+            </a>
+        </div>
+        <div class="text-center m-3 p-3 bg-light content-box">
+            <div class="h5 p-3">Attendance Record for <span class="font-weight-bold">{{ student.andrewID }}</span></div>
+            <div class="m-3">
+                {% if classes|length == 0 %}
+                    <div class="text-muted">
+                        Nothing to show here
+                    </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table" style='white-space:nowrap'>
+                            <tbody>
+                                <tr>
+                                    <th scope="col">Class</th>
+                                    {% for c in classes %}
+                                        <td scope="col">{{ c.date }}</td>
+                                    {% endfor %}
+                                </tr>
+                                <tr>
+                                    <th scope="row">Status</th>
+                                    {% for c in classes %}
+                                        <td scope="row" class="font-weight-bold text-uppercase {{ c.status|get_attendance_bsclass }}">
+                                            {{ c.status }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-left text-muted">You have {{ absences }} unexcused absence{% if absences > 1 %}s{% endif %}*</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="text-muted font-weight-light m-4 text-left">
+            * As per StuCo 
+            <u><a class="text-muted" href="https://www.cmu.edu/stuco/faq/" target="_blank">policy</a></u>,
+            you will be given a no pass grade if you have more than 
+            <span class="font-weight-bold">two</span> 
+            unexcused absences. Make sure to contact us if you can't make it to class!
+        </div>
     {% endif %}
 {% endblock %}
