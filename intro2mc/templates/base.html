@@ -12,6 +12,7 @@
         <link href="{% static 'css/base.css' %}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <script>
             let collapsed = true
             function drp_handler() {
@@ -51,7 +52,7 @@
                     <div class='row small text-center justify-content-center align-items-center'>
                         <img class="d-lg-none m-sm-1 m-md-2" id='drp_btn' src="{% static '/icon/chest_closed.png' %}" height='50px' width='50px' OnClick='drp_handler()'>
                         
-                        <a class="col-lg col-8 order-lg-2 order-md-1 mb-lg-0 mb-3 my-auto" href="{% url 'home' %}">
+                        <a class="col-lg col-md-7 col-9 order-lg-2 order-md-1 mb-lg-0 mb-3 my-auto" href="{% url 'home' %}">
                             <img id='logo' class="img-fluid" src="{% static '/icon/logo.png' %}">
                         </a>
         
@@ -116,7 +117,7 @@
 
         <div id="home-img" class="text-center align-middle align-items-center p-5"
              style="background-image: url('{% static "/background/bg.png"%}')">
-            <div class="p-5">
+            <div class="py-lg-5 py-sm-0">
                 <div class="h2 text-white">About</div>
                 <br>
                 <div class="text-white lead font-weight-normal">
