@@ -6,19 +6,37 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url 'admin:index' %}">
-        <button>Django Admin</button>
-    </a>
-    <a href="{% url 'adminpanel-action' action='semester' %}">
-        <button>Semester Settings</button>
-    </a>
-    <a href="{% url 'adminpanel-action' action='whitelist' %}">
-        <button>Whitelist All</button>
-    </a>
-    <a href="{% url 'attendance' %}">
-        <button>Attendance</button>
-    </a>
-    <a href="{% url 'logout' %}">
-        <button>Log out</button>
-    </a>
+    <div class="text-center m-3 p-3 bg-light content-box">
+        <div class="h2 p-3">Admin Panel</div>
+        <div class="row mb-3 justify-content-center">
+            <div class="col-lg-5 col-md-6 col">
+                <a href="{% url 'attendance' %}" 
+                    type="button" 
+                    class="btn btn-primary btn-block my-2">
+                    Attendance
+                </a>
+                <a href="{% url 'admin:index' %}" 
+                    type="button" 
+                    class="btn btn-primary btn-block my-2">
+                    Django Admin
+                </a>
+                <a href="{% url 'adminpanel-action' action='whitelist' %}" 
+                    type="button" 
+                    class="btn btn-primary btn-block my-2">
+                    Whitelist All
+                </a>
+                <a href="{% url 'adminpanel-action' action='semester' %}" 
+                    type="button" 
+                    class="btn btn-primary btn-block my-2">
+                    Semester Settings
+                </a>
+                <br>
+                <a href="{% url 'logout' %}" 
+                    type="button" 
+                    class="btn btn-outline-secondary btn-block my-2">
+                    Log out
+                </a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
