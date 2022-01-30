@@ -161,13 +161,14 @@ def attendance(request, id=None):
         for s in sessions:
             # check if class is on Tuesday
             if s.date.weekday() != 1: continue
+
             cls = {'date': str(s.date)}
             try:
                 att = Attendance.objects.get(student=student, term=cfg.currSemester, classSession=s)
                 if att.excused: cls['status'] = 'Excused'
                 else: cls['status'] = 'Present'
             except Exception as e:
-                if s.date < student.created_at.date(): cls['status'] = 'N/A'
+                if s.date < timezone.localtime(student.created_at).date(): cls['status'] = 'N/A'
                 else: 
                     cls['status'] = 'Absent'
                     absences += 1
@@ -181,9 +182,6 @@ def attendance(request, id=None):
         
         print(classes)
         return render(request, 'attendance.html', context)
-
-        # messages.error(request, access_denied_err())
-        # return redirect('home')
 
     if cache.get(id_key) != id: return redirect('404')
     
