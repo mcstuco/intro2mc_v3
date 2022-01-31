@@ -45,12 +45,12 @@
         <div class="row mb-3 justify-content-center">
             <div class="col-lg-5 col-md-6 col">
                 <a href="{% url 'attendance' %}" 
-                   type="button" 
+                   role="button" 
                    class="btn btn-primary btn-block my-2">
                    Attendance
                 </a>
                 <a href="{% url 'logout' %}" 
-                   type="button" 
+                   role="button" 
                    class="btn btn-outline-secondary btn-block my-2">
                    Log out
                 </a>
@@ -64,9 +64,9 @@
                 <div class="h5">IP Address</div>
                 <div>
                     {{ server.address }} 
-                    {% comment %} <a class="ml-2" tabindex="0" id="copy" data-trigger="focus" onClick="copy()" data-toggle="popover" data-content="Copied to clipboard!">
+                    <a class="ml-2" tabindex="0" id="copy" data-trigger="focus" onClick="copy()" data-toggle="popover" data-content="Copied to clipboard!">
                         <i class="far fa-copy text-muted"></i>
-                    </a> {% endcomment %}
+                    </a>
                 </div>
             </div>
             <div class="pb-3">
