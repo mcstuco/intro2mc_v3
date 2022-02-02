@@ -180,7 +180,6 @@ def attendance(request, id=None):
             'absences': absences,
         }
         
-        print(classes)
         return render(request, 'attendance.html', context)
 
     if cache.get(id_key) != id: return redirect('404')
