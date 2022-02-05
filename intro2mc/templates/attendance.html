@@ -9,7 +9,7 @@
 {% block content %}
     {% if user.is_superuser %}
         <div class="m-3 text-left">
-            <a class="btn btn-link" href="{% url 'account' %}" >
+            <a class="btn btn-link" onclick="history.back()">
                 <i class="fas fa-angle-left"></i> Back
             </a>
         </div>

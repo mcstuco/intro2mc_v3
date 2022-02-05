@@ -30,7 +30,7 @@
 
 {% block content %}
     <div class="text-center m-3 p-3 bg-light content-box">
-        <div class="h2 p-3">My Profile</div>
+        <div class="h3 p-3">My Profile</div>
         <div class="p-3">
             <img src="{{ student.picture }}" alt="">
             <div class="h4 my-1">{{ student.name }}</div>
@@ -49,6 +49,11 @@
                    class="btn btn-primary btn-block my-2">
                    Attendance
                 </a>
+                <a href="{% url 'assignments' %}" 
+                   role="button" 
+                   class="btn btn-primary btn-block my-2">
+                   Assignments
+                </a>
                 <a href="{% url 'logout' %}" 
                    role="button" 
                    class="btn btn-outline-secondary btn-block my-2">
@@ -59,7 +64,7 @@
     </div>
     {% if server %}
         <div class="text-center m-3 p-3 bg-light content-box">
-            <div class="h2 p-3">Server Details</div>
+            <div class="h3 p-3">Server Details</div>
             <div class="pb-3">
                 <div class="h5">IP Address</div>
                 <div>
