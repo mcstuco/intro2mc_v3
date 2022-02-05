@@ -100,8 +100,7 @@ def account(request):
     if request.user.is_superuser:
         return redirect('adminpanel')
 
-    try:
-        student = Student.objects.get(andrewID=request.user.username)
+    try: student = Student.objects.get(andrewID=request.user.username)
     except Exception as e:
         return redirect('registration')
 
@@ -148,8 +147,7 @@ def attendance(request, id=None):
         context["url"] = url
         return render(request, 'attendance.html', context)
 
-    try:
-        student = Student.objects.get(andrewID=request.user.username)
+    try: student = Student.objects.get(andrewID=request.user.username)
     except Exception as e:
         messages.error(request, generic_err("Unable to find student.", e))
         return redirect('registration')
@@ -256,6 +254,35 @@ def admin_panel(request, action=None):
         return redirect('adminpanel')
 
     return render(request, 'admin-panel.html', context)
+
+@login_required()
+def assignments(request):
+    context = get_default_context()
+    cfg = AppConfig().load()
+
+    try: student = Student.objects.get(andrewID=request.user.username)
+    except Exception as e:
+        messages.error(request, generic_err("Unable to find student.", e))
+        return redirect('registration')
+
+    ass = Assignment.objects.filter(term=cfg.currSemester, userSubmittable=True).order_by('-created_at')
+    context['assignments'] = []
+    for a in ass:
+        submission = None
+        try: 
+            submission = Submission.objects.filter(
+                assignment=a, 
+                student=student, 
+            ).order_by('-updated_at')[0]
+        except Exception as e: print(e)
+
+        context['assignments'].append({
+            'name': a.name,
+            'desc': a.description,
+            'submission': submission,
+        })
+
+    return render(request, 'assignments.html', context)
 
 ########### util methods ###########
 def get_default_context():
