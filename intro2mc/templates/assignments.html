@@ -76,7 +76,7 @@
                         Nothing to show here
                     </div>
                 {% else %}
-                    <div class="accordion p-2" id="accordion">
+                    <div class="accordion p-md-2 p-1" id="accordion">
                         {% for a in assignments %}
                             <div class="card border-left-0 border-right-0">
                                 <div class="card-header bg-light border-0 p-0" id="heading{{a.name}}">
@@ -95,7 +95,7 @@
                                     <div class="card-body">
                                         <h6 class="card-subtitle mb-2 text-muted">{{a.desc}}</h6>
                                         <hr>
-                                        <div class="container">
+                                        <div>
                                             <div class="text-muted text-left">
                                                 Submit by: 
                                                 <kbd id="command{{a.name}}">/hw submit {{ a.name }}</kbd>
@@ -104,12 +104,16 @@
                                                 </a>
                                             </div>
                                             <br>
-                                            <div class="text-left">
+                                            <div class="d-flex justify-content-between">
                                                 {% if a.submission %}
-                                                    Submitted at {{ a.submission.created_at }}
-                                                    <span class="float-right text-capitalize {{ a.submission.grade|get_grade_bsclass }}">
-                                                        {{ a.submission.grade|get_grade_str }}
-                                                    </span>
+                                                    <div class="text-left">
+                                                        Submitted at {{ a.submission.created_at }}
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <span class="text-capitalize {{ a.submission.grade|get_grade_bsclass }}">
+                                                            {{ a.submission.grade|get_grade_str }}
+                                                        </span>
+                                                    </div>
                                                 {% else %}
                                                     No submission
                                                 {% endif %}

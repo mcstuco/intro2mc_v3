@@ -84,6 +84,26 @@ body {
     border-radius: 50px;
 }
 
+@media (max-width: 720px) {
+    .content-box {
+        border-radius: 0px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    .container-md {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+    }
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
 iframe {
     border-radius: 15px;
 }
