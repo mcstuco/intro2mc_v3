@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+{% load template_filters %}
+
+{% block title %}
+    Assignments
+{% endblock %}
+
+{% block script %}
+    <script>
+        function copy(id) {
+            let elem = document.getElementById(id)
+            console.log(elem.innerHTML)
+            navigator.clipboard.writeText(elem.innerHTML)
+        }
+
+        $(document).ready(function(){
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            })
+
+            $('[data-toggle="popover"]').popover()
+
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+
+            {% for a in assignments %}
+                $('#collapse{{a.name}}').on('hide.bs.collapse show.bs.collapse', function () {
+                    $('#icon{{a.name}}').toggleClass("down");
+                })
+            {% endfor %}
+        });
+    </script>
+{% endblock %}
+
+{% block style %}
+    <style>
+        a > i:hover {
+            cursor: pointer;
+            color: black !important;
+        }
+
+        .rotate{
+            -moz-transition: all 0.2s linear;
+            -webkit-transition: all 0.2s linear;
+            transition: all 0.2s linear;
+        }
+        
+        .rotate.down{
+            -ms-transform: rotate(180deg);
+            -moz-transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .card-header:hover {
+            background-color: aliceblue !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% if user.is_superuser %}
+    {% else %}
+        <div class="m-3 text-left">
+            <a class="btn btn-link" onclick="history.back()">
+                <i class="fas fa-angle-left"></i> Back
+            </a>
+        </div>
+        <div class="text-center m-3 p-3 bg-light content-box">
+            <div class="h3 p-3">Assignments</div>
+            <div class="m-3">
+                {% if assignments|length == 0 %}
+                    <div class="text-muted">
+                        Nothing to show here
+                    </div>
+                {% else %}
+                    <div class="accordion p-2" id="accordion">
+                        {% for a in assignments %}
+                            <div class="card border-left-0 border-right-0">
+                                <div class="card-header bg-light border-0 p-0" id="heading{{a.name}}">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-block text-left collapsed text-center p-3" 
+                                            type="button" data-toggle="collapse" data-target="#collapse{{a.name}}" 
+                                            aria-expanded="false" aria-controls="collapse{{a.name}}" style="box-shadow: none">
+                                            <span class="mx-3">{{a.name}}</span>
+                                            <i class="{{ a.submission|get_hwstatus_faclass }}"></i>
+                                            <i class="fas fa-chevron-down float-right rotate" id="icon{{a.name}}"></i>
+                                        </button>
+                                    </h2>
+                                </div>
+                            
+                                <div id="collapse{{a.name}}" class="collapse" aria-labelledby="heading{{a.name}}">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">{{a.desc}}</h6>
+                                        <hr>
+                                        <div class="container">
+                                            <div class="text-muted text-left">
+                                                Submit by: 
+                                                <kbd id="command{{a.name}}">/hw submit {{ a.name }}</kbd>
+                                                <a class="ml-2" tabindex="0" id="copy" data-trigger="focus" onClick="copy('command{{a.name}}')" data-toggle="popover" data-content="Copied to clipboard!">
+                                                    <i class="far fa-copy text-muted"></i>
+                                                </a>
+                                            </div>
+                                            <br>
+                                            <div class="text-left">
+                                                {% if a.submission %}
+                                                    Submitted at {{ a.submission.created_at }}
+                                                    <span class="float-right text-capitalize {{ a.submission.grade|get_grade_bsclass }}">
+                                                        {{ a.submission.grade|get_grade_str }}
+                                                    </span>
+                                                {% else %}
+                                                    No submission
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-left text-muted p-2">You have {{ assignments|count_missing_ass }} missing/no-pass assignment{% if assignments|count_missing_ass > 1 %}s{% endif %}*</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="text-muted font-weight-light m-4 text-left">
+            * As per StuCo 
+            <u><a class="text-muted" href="https://www.cmu.edu/stuco/faq/" target="_blank">policy</a></u>,
+            you will be given a no pass grade if you have more than 
+            <span class="font-weight-bold">two</span> 
+            missing/no-pass assignments.
+        </div>
+    {% endif %}
+{% endblock %}

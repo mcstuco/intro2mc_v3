@@ -29,6 +29,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name="index.html"), name='logout'),
     path('attendance/', views.attendance, name='attendance'),
     path('attendance/<str:id>', views.attendance),
+    path('assignments/', views.assignments, name='assignments'),
     path('registration', views.register_ign, name='registration'),
     path('admin-panel/', views.admin_panel, name="adminpanel"),
     path('admin-panel/<str:action>', views.admin_panel, name="adminpanel-action"),
