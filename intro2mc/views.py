@@ -270,10 +270,10 @@ def assignments(request):
     for a in ass:
         submission = None
         try: 
-            submission = Submission.objects.filter(
+            submission = (Submission.objects.filter(
                 assignment=a, 
                 student=student, 
-            ).order_by('-updated_at')[0]
+            ).order_by('-updated_at') or [None])[0]
         except Exception as e: print(e)
 
         context['assignments'].append({

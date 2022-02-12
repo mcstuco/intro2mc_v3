@@ -39,6 +39,18 @@ def get_hwstatus_faclass(submission):
     return hwstatus_faclass.get(submission.grade.lower(), default)
 
 @register.filter
+# Returns the tooltip message for an assignment status
+def get_hwstatus_tooltip(submission):
+    default = "No Submission"
+    hwstatus_tooltip = {
+        "u": "Submitted",
+        "p": "Submitted",
+        "r": "Action Needed",
+    }
+    if not submission: return default
+    return hwstatus_tooltip.get(submission.grade.lower(), default)
+
+@register.filter
 # Returns the number of missing submissions in a list
 def count_missing_ass(assignments):
     return len([a for a in assignments if not a['submission'] or a['submission'].grade.lower() == 'r'])

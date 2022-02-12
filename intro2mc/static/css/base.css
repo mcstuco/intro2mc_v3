@@ -84,7 +84,7 @@ body {
     border-radius: 50px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 767px) {
     .content-box {
         border-radius: 0px;
         margin-left: 0 !important;

@@ -59,35 +59,35 @@
                         <div id='menul' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-lg-1 order-md-2'>
                             <a class='nav-icon mx-auto col-4' href="{% url 'syllabus' %}" target='_blank'>
                                 <img src="{% static '/icon/book_and_quill.png' %}" height='30px'>
-                                <br><span>SYLLABUS</span>
+                                <br><span class="text-uppercase">Syllabus</span>
                             </a>
                             <a class='nav-icon mx-auto col-4' href=''>
                                 <img src="{% static '/icon/painting2.png' %}" height='30px'>
-                                <br><span>VIDEOS</span>
+                                <br><span class="text-uppercase">Videos</span>
                             </a>
                             <a class='nav-icon mx-auto col-4' href=''>
                                 <img src="{% static '/icon/diamond_pickaxe.png' %}" height='30px'>
-                                <br><span>RESOURCES</span>
+                                <br><span class="text-uppercase">Resources</span>
                             </a>
                         </div>
                         <div id='menur' class='d-none d-lg-flex col-lg-4 col-md-12 mt-lg-0 mt-3 row text-center order-3'>
                             <a class='nav-icon mx-auto col-4' href="{% url 'account' %}" target=''>
                                 <img src="{% static '/icon/nether_portal.gif' %}" height='30px'>
-                                <br><span>
+                                <br><span class="text-uppercase">
                                     {% if user.is_superuser %}
-                                        ADMIN
+                                        Admin
                                     {% else %}
-                                        STUDENT
+                                        Student
                                     {% endif %}
                                 </span>
                             </a>
                             <a class='nav-icon mx-auto col-4' href="{% url 'map' %}" target='_blank'>
                                 <img src="{% static '/icon/map.png' %}" height='30px'>
-                                <br><span>MAP</span>
+                                <br><span class="text-uppercase">Map</span>
                             </a>
                             <a class='nav-icon mx-auto col-4' href="https://www.andrew.cmu.edu/course/98-205/cactus.html">
                                 <img src="{% static '/icon/cactus.png' %}" height='30px'>
-                                <br><span>CACTUS</span>
+                                <br><span class="text-uppercase">Cactus</span>
                             </a>
                         </div>
                       </div>
@@ -137,11 +137,9 @@
                 <div class="d-flex justify-content-center font-weight-light">
                     <a      class="p-1 m-1" href="https://www.cmu.edu/stuco/" target="_blank">About StuCo</a>
                     <div    class="p-1 m-1">|</div>
-                    <a      class="p-1 m-1" href="https://forms.gle/QraircVmQ5BtRsBB8">Feedback</a>
+                    <a      class="p-1 m-1" href="https://github.com/mcstuco/intro2mc_v3/issues/new" target="_blank">Bug Report</a>
                     <div    class="p-1 m-1">|</div>
-                    <a      class="p-1 m-1" href="https://forms.gle/43xSkcJdpRj8mH9E6">Bug Report</a>
-                    <div    class="p-1 m-1">|</div>
-                    <a      class="p-1 m-1" href="https://github.com/mcstuco/intro2mc_v3">Source Code</a>
+                    <a      class="p-1 m-1" href="https://github.com/mcstuco/intro2mc_v3" target="_blank">Source Code</a>
                 </div>
                 <hr>
                 <div class="text-muted m-2">Developed by Zhengze Gong</div>

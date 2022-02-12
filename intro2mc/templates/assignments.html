@@ -85,7 +85,7 @@
                                             type="button" data-toggle="collapse" data-target="#collapse{{a.name}}" 
                                             aria-expanded="false" aria-controls="collapse{{a.name}}" style="box-shadow: none">
                                             <span class="mx-3">{{a.name}}</span>
-                                            <i class="{{ a.submission|get_hwstatus_faclass }}"></i>
+                                            <i class="{{ a.submission|get_hwstatus_faclass }}" data-toggle="tooltip" title="{{ a.submission|get_hwstatus_tooltip }}"></i>
                                             <i class="fas fa-chevron-down float-right rotate" id="icon{{a.name}}"></i>
                                         </button>
                                     </h2>
