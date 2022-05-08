@@ -205,6 +205,82 @@ def attendance(request, id=None):
 
     return redirect('account')
 
+@login_required
+def records(request):
+    context = get_default_context()
+    if not request.user.is_superuser:
+        messages.error(request, access_denied_err())
+        return redirect('home')
+    cfg = AppConfig().load()
+
+    # Get relevant student, class, and assignment objects
+    assignments = Assignment.objects.filter(term=cfg.currSemester, userSubmittable=True).order_by('created_at')
+    sessions = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
+    classes = []
+    for s in sessions:
+        if s.date.weekday() == 1:
+            classes.append(s)
+    students = Student.objects.all().order_by('andrewID')
+
+    ### Attendance ###
+    # header row of table
+    dates = []
+    for c in classes:
+        dates.append(c.date)
+
+    # one student per row
+    attendanceinfos = []
+    for s in students:
+        sname = s.andrewID
+        absences = 0
+        info = []
+        for c in classes:
+            try:
+                att = Attendance.objects.get(student=s, term=cfg.currSemester, classSession=c)
+                if att.excused: info.append('Excused')
+                else: info.append('Present')
+            except Exception as e:
+                if c.date < timezone.localtime(s.created_at).date(): info.append('N/A')
+                else:
+                    info.append('Absent')
+                    absences += 1
+        attendanceinfos.append({'info':info,'name':sname,'absences':absences})
+
+    ### Assignments ###
+    # header row of table
+    hwnames = []
+    for a in assignments:
+        hwnames.append(a.name)
+
+    # one row per student
+    assignmentinfos = []
+    for s in students:
+        sname = s.andrewID
+        missing = 0
+        info = []
+        for a in assignments:
+            submission = None
+            try: 
+                submission = (Submission.objects.filter(
+                    assignment=a,
+                    student=s,
+                ).order_by('-updated_at') or [None])[0]
+            except Exception as e: print(e)
+            if submission is None or submission.grade == 'R':
+                missing += 1
+            info.append(submission)
+        assignmentinfos.append({'info':info,'name':sname,'missing':missing})
+
+    # render
+    context = {
+        'dates': dates,
+        'attendanceinfos': attendanceinfos,
+        'hwnames': hwnames,
+        'assignmentinfos': assignmentinfos,
+    }
+    return render(request, 'records.html', context)
+
+
 @login_required()
 def admin_panel(request, action=None):
     context = get_default_context()

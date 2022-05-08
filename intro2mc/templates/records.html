@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% load template_filters %}
+
+{% block title %}
+    Records
+{% endblock %}
+
+{% block content %}
+    <div class="m-3 text-left">
+        <a class="btn btn-link" href="{% url 'account' %}" >
+            <i class="fas fa-angle-left"></i> Back
+        </a>
+    </div>
+    <div class="text-center m-3 p-3 bg-light content-box">
+        <div class="h5 p-3">Student Attendance Records</div>
+        <div class="m-3">
+            {% if dates|length == 0 or attendanceinfos|length == 0 %}
+                <div class="text-muted">
+                    Nothing to show here
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table" style='white-space:nowrap'>
+                        <tbody>
+                            <tr>
+                                <th scope="col">Andrew ID</th>
+                                <th scope="col">Absences</th>
+                                {% for d in dates %}
+                                    <td scope="col">{{ d }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% for ai in attendanceinfos %}
+                                <tr>
+                                    <th scope="row">{{ ai.name }}</th>
+                                    <th scope="row">{{ ai.absences }}</th>
+                                    {% for info in ai.info %}
+                                        <td scope="row" class="font-weight-bold text-uppercase {{ info|get_attendance_bsclass }}">
+                                            {{ info }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="text-center m-3 p-3 bg-light content-box">
+        <div class="h5 p-3">Student Assignment Records</div>
+        <div class="m-3">
+            {% if hwnames|length == 0 or assignmentinfos|length == 0 %}
+                <div class="text-muted">
+                    Nothing to show here
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table" style='white-space:nowrap'>
+                        <tbody>
+                            <tr>
+                                <th scope="col">Andrew ID</th>
+                                <th scope="col">Missing</th>
+                                {% for hwname in hwnames %}
+                                    <td scope="col">{{ hwname }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% for ai in assignmentinfos %}
+                                <tr>
+                                    <th scope="row">{{ ai.name }}</th>
+                                    <th scope="row">{{ ai.missing }}</th>
+                                    {% for submission in ai.info %}
+                                        <td scope="row">
+                                            <i class="{{ submission|get_hwstatus_faclass }}"></i>
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
