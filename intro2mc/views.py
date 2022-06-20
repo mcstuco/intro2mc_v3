@@ -231,7 +231,7 @@ def records(request):
     # one student per row
     attendanceinfos = []
     for s in students:
-        sname = s.andrewID
+        sname = str(s)
         absences = 0
         info = []
         for c in classes:
@@ -255,7 +255,7 @@ def records(request):
     # one row per student
     assignmentinfos = []
     for s in students:
-        sname = s.andrewID
+        sname = str(s)
         missing = 0
         info = []
         for a in assignments:

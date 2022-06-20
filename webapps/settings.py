@@ -30,7 +30,9 @@ SECRET_KEY = KEY_CONFIG.get('Django', 'secret')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS=['https://www.mcstuco.net']
+
+ALLOWED_HOSTS = ['www.mcstuco.net']
 
 
 # Application definition
@@ -165,6 +167,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 STATIC_URL = '/static/'
 
 # Absolute path to server files
