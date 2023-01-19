@@ -66,14 +66,24 @@ def register_ign(request):
     context['form'] = form
     if request.method == 'POST':           
         form = StudentForm(request.POST)
-        if form.is_valid():
-            student.IGN = form.cleaned_data["IGN"]
-            student.save()
-            messages.success(request, 'Your in-game name has been successfully registered.')
-            return redirect('account')
-        else:
+
+        if not form.is_valid():
             context['form'] = form
             return render(request, 'registration.html', context)
+
+        try:
+            id = fetch_uuid(form.cleaned_data["IGN"])
+        except Exception as e:
+            messages.error(request, f'Error fetching uuid for {form.cleaned_data["IGN"]}. This usually means that you entered a nonexistent username.')
+            return render(request, 'registration.html', context)
+        else:
+            student.uuid = str(uuid.UUID(id))
+            student.IGN = form.cleaned_data["IGN"]
+            student.discord = form.cleaned_data["discord"]
+            student.save()
+
+            messages.success(request, 'You have been successfully registered.')
+            return redirect('account')
 
     return render(request, 'registration.html', context)
 

@@ -21,7 +21,7 @@ class AppCfgForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     class Meta:
         model = models.Student
-        fields = ['IGN']
+        fields = ['IGN', 'discord']
     
     def clean_IGN(self):
         ign = self.cleaned_data['IGN']

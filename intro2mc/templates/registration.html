@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    IGN Registration
+    Registration
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
         </div>
         <div class="my-4">
             <div class="my-2">
-                <span class="h5">Enter your Minecraft IGN* here </span>
+                <span class="h5">Enter your Minecraft username* and Discord ID** here </span>
             </div>
             <form action="{% url 'registration' %}" 
                 method="post" class="my-4">
@@ -25,10 +25,22 @@
                         <input type="text" class="form-control w-50 bg-white"
                             name="{{ form.IGN.name }}"
                             id="id_{{ form.IGN.name }}"
-                            placeholder="{{ student.IGN }}" 
+                            placeholder="Minecraft username" 
                             autofocus onClick="this.select();"> 
                     </div>
                     {% for err in form.IGN.errors %}
+                        <div class="text-danger m-2">{{ err|escape }}</div>
+                    {% endfor %}
+                </div>
+                <div class="m-4">
+                    <div class="d-flex justify-content-center">
+                        <input type="text" class="form-control w-50 bg-white"
+                            name="{{ form.discord.name }}"
+                            id="id_{{ form.discord.name }}"
+                            placeholder="Discord ID" 
+                            autofocus onClick="this.select();"> 
+                    </div>
+                    {% for err in form.discord.errors %}
                         <div class="text-danger m-2">{{ err|escape }}</div>
                     {% endfor %}
                 </div>
@@ -47,6 +59,9 @@
         Go to your Minecraft 
         <u><a class="text-muted" href="https://www.minecraft.net/en-us/profile" target="_blank">profile page</a></u> 
         to find or change your username.
+        <br/><br/>
+        ** Discord ID is the id/username that identifies you on the server, formatted as "name#tagline",
+        for example Trollium#9248. You can find this at the bottom left corner in Discord.
     </div>
     
 {% endblock %}

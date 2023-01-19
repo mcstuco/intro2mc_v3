@@ -41,6 +41,7 @@ class Student(HasTimeStamps):
     name = models.CharField(max_length=200, default='')
     picture = models.CharField(max_length=200)
     IGN = models.CharField(max_length=200)
+    discord = models.CharField(max_length=200)
     uuid = models.CharField(max_length=200)
 
     def __str__(self):
