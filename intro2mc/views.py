@@ -72,13 +72,13 @@ def register_ign(request):
             return render(request, 'registration.html', context)
 
         try:
-            id = fetch_uuid(form.cleaned_data["IGN"])
+            case_correct_username, id = fetch_mojang_userinfo(form.cleaned_data["IGN"])
         except Exception as e:
             messages.error(request, f'Error fetching uuid for {form.cleaned_data["IGN"]}. This usually means that you entered a nonexistent username.')
             return render(request, 'registration.html', context)
         else:
             student.uuid = str(uuid.UUID(id))
-            student.IGN = form.cleaned_data["IGN"]
+            student.IGN = case_correct_username
             student.discord = form.cleaned_data["discord"]
             student.save()
 
@@ -369,7 +369,7 @@ def fetch_userinfo(request):
     }
     return userinfo
 
-def fetch_uuid(ign):
+def fetch_mojang_userinfo(ign):
     response = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{ign}")
     if response.status_code == STATUS_NO_CONTENT:
         raise Exception('Unable to retrieve uuid for this username')
@@ -378,7 +378,7 @@ def fetch_uuid(ign):
     if 'error' in response_json:
         raise Exception(response_json.get('error'))
 
-    return response_json.get('id')
+    return response_json.get('name'), response_json.get('id')
 
 def generate_qrcode(url, size=30):
     img = qrcode.make(url, 
