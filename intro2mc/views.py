@@ -309,35 +309,6 @@ def admin_panel(request, action=None):
             form = AppCfgForm(instance=cfg)
             context['form'] = form
         return render(request, 'semester.html', context)
-    
-    if action == 'whitelist':
-        roster = get_roster()
-        wl_file = os.path.join(settings.SERVER_DIR, 'whitelist.json')
-        with open(wl_file, 'r') as f: whitelist = json.load(f)
-
-        count = 0
-        for s in Student.objects.all():
-            if s.andrewID in roster:
-                if s.uuid == None or s.uuid == '':
-                    try:
-                        id = fetch_uuid(s.IGN)
-                    except Exception as e:
-                        messages.error(request, f'Error fetching uuid for {s.andrewID} ({s.IGN}) [{str(e)}]')
-                    else:
-                        s.uuid = str(uuid.UUID(id))
-                        s.save()
-                if not any(d['uuid'] == s.uuid for d in whitelist):
-                    count += 1
-                    whitelist.append({
-                        'uuid': s.uuid,
-                        'name': s.IGN,
-                    })
-
-        with open(wl_file, 'w') as f: json.dump(whitelist, f, indent=2)
-
-        messages.info(request, f'Added {count} people to the server whitelist')
- 
-        return redirect('adminpanel')
 
     return render(request, 'admin-panel.html', context)
 
