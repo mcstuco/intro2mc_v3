@@ -32,6 +32,12 @@ class StudentAdmin(admin.ModelAdmin):
     class Meta:
         model = Student
 
+class InvitedStudentAdmin(admin.ModelAdmin):
+    fields = [field.name for field in InvitedStudent._meta.concrete_fields]
+    readonly_fields = ['created_at', 'updated_at']
+    class Meta:
+        model = InvitedStudent
+
 class VideoAdmin(admin.ModelAdmin):
     fields = [field.name for field in Video._meta.concrete_fields]
     readonly_fields = ['created_at', 'updated_at']
@@ -56,6 +62,7 @@ admin.site.register(ClassSession, ClassSessionAdmin)
 admin.site.register(Meme, MemeAdmin)
 admin.site.register(Resource, ResourceAdmin)
 admin.site.register(Student, StudentAdmin)
+admin.site.register(InvitedStudent, InvitedStudentAdmin)
 admin.site.register(Video, VideoAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
 admin.site.register(Submission, SubmissionAdmin)

@@ -45,7 +45,15 @@ class Student(HasTimeStamps):
     uuid = models.CharField(max_length=200)
 
     def __str__(self):
-        return f'{self.andrewID} [{self.IGN}]'
+        return f'{self.andrewID} [{self.IGN}] ({self.discord})'
+
+class InvitedStudent(HasTimeStamps):
+    IGN = models.CharField(max_length=200, primary_key=True)
+    uuid = models.CharField(max_length=200)
+    invitedBy = models.ForeignKey(Student, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.IGN)
 
 class ClassSession(HasTimeStamps):
     date = models.DateField(primary_key=True)
