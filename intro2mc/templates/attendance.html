@@ -13,17 +13,10 @@
                 <i class="fas fa-angle-left"></i> Back
             </a>
         </div>
-        <div class="mt-5 h1">
-            Scan the QR Code to Sign in
-        </div>
-        <div class="text-center">
-            {{ svg|safe }}
-        </div>
-        <div class="text-muted h5">
-            or go to this URI
-        </div>
-        <div class="text-muted mb-5">
-            {{ url }}
+        <div class="text-center m-3 p-3 bg-light content-box">
+            <div class="text-center m-3">
+                Code for {{ today }} is <h2 class="m-3 p-3">{{ code }}</h2>
+            </div>
         </div>
     {% else %}
         <div class="m-3 text-left">
@@ -33,6 +26,18 @@
         </div>
         <div class="text-center m-3 p-3 bg-light content-box">
             <div class="h5 p-3">Attendance Records for <span class="font-weight-bold">{{ student.andrewID }}</span></div>
+            <form action="{% url 'attendance' %}" method="post" class="my-4">
+                {% csrf_token %}
+                <div class="d-inline-flex justify-content-center">
+                    <input type="text" class="form-control w-10 bg-white"
+                        name="code"
+                        id="id_code"
+                        placeholder="Attendance code"
+                        autofocus onClick="this.select();">
+
+                    <button type="submit" class="btn btn-primary mx-2">Submit</button>
+                </div>
+            </form>
             <div class="m-3">
                 {% if classes|length == 0 %}
                     <div class="text-muted">
@@ -59,7 +64,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="text-left text-muted">You have {{ absences }} unexcused absence{% if absences > 1 %}s{% endif %}*</div>
+                    <div class="text-left text-muted">You have {{ absences }} unexcused absence{% if absences > 1 or absences == 0 %}s{% endif %}*</div>
                 {% endif %}
             </div>
         </div>

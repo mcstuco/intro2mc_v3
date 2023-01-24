@@ -6,15 +6,13 @@ from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
 
-from io import BytesIO
 from mcstatus import MinecraftServer
 import requests
 import logging
 import uuid
-import os
 import json
-import qrcode
-import qrcode.image.svg
+import string
+import random
 
 from intro2mc.alerts import *
 from intro2mc.forms import *
@@ -132,88 +130,70 @@ def account(request):
     return render(request, 'account.html', context)
 
 @login_required()
-def attendance(request, id=None):
+def attendance(request):
     context = get_default_context()
-    id_key = 'attendance_id'
     cfg = AppConfig().load()
     today = timezone.localtime(timezone.now()).date()
+
     if request.user.is_superuser:
         sess, created = ClassSession.objects.get_or_create(
-            term=cfg.currSemester, 
+            term=cfg.currSemester,
             date=today
         )
+        if created:
+            sess.code=''.join(random.choices(string.ascii_uppercase, k=4))
+            messages.info(request, 'New class session created.')
         sess.save()
 
-        if created: messages.info(request, 'New class session created.')
-
-        id = cache.get(id_key)
-        if id == None:
-            id = str(uuid.uuid4())
-            cache.set(id_key, id)
-
-        url = request.build_absolute_uri(f"/attendance/{id}")
-        qr_code = generate_qrcode(url)
-        context["svg"] = qr_code
-        context["url"] = url
+        context["today"] = str(today)
+        context["code"] = sess.code
         return render(request, 'attendance.html', context)
 
-    try: student = Student.objects.get(andrewID=request.user.username)
+    try:
+        student = Student.objects.get(andrewID=request.user.username)
     except Exception as e:
         messages.error(request, generic_err("Unable to find student.", e))
         return redirect('registration')
 
-    if id is None:
-        sessions = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
-        classes = []
-        absences = 0
-        for s in sessions:
-            # check if class is on Tuesday
-            if s.date.weekday() != 1: continue
+    if request.method == 'POST':
+        try:
+            sess = ClassSession.objects.get(code=request.POST.get("code").upper(), term=cfg.currSemester)
+            attendance, created = Attendance.objects.get_or_create(
+                student=student,
+                term=cfg.currSemester,
+                classSession=sess
+            )
+            if created:
+                attendance.save()
+                messages.success(request, 'Your attendance has been recorded.')
+            else:
+                messages.warning(request, 'You have already signed in.')
+        except Exception as e:
+            messages.error(request, authencication_failed_err("Invalid or expired attendance code."))
 
-            cls = {'date': str(s.date)}
-            try:
-                att = Attendance.objects.get(student=student, term=cfg.currSemester, classSession=s)
-                if att.excused: cls['status'] = 'Excused'
-                else: cls['status'] = 'Present'
-            except Exception as e:
-                if s.date < timezone.localtime(student.created_at).date(): cls['status'] = 'N/A'
-                else: 
-                    cls['status'] = 'Absent'
-                    absences += 1
-            classes.append(cls)
+    sessions = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
+    classes = []
+    absences = 0
+    for s in sessions:
+        cls = {'date': str(s.date)}
+        try:
+            att = Attendance.objects.get(student=student, term=cfg.currSemester, classSession=s)
+            if att.excused: cls['status'] = 'Excused'
+            else: cls['status'] = 'Present'
+        except Exception as e:
+            if s.date < timezone.localtime(student.created_at).date(): cls['status'] = 'N/A'
+            else:
+                cls['status'] = 'Absent'
+                absences += 1
+        classes.append(cls)
 
-        context = {
-            'student': student,
-            'classes': classes,
-            'absences': absences,
-        }
-        
-        return render(request, 'attendance.html', context)
-
-    if cache.get(id_key) != id: return redirect('404')
+    context = {
+        'student': student,
+        'classes': classes,
+        'absences': absences,
+    }
     
-    try:
-        sess = ClassSession.objects.get(
-            term=cfg.currSemester, 
-            date=today
-        )
-    except Exception as e:
-        messages.error(request, generic_err("Unable to find a class session for today.", e))
-        return redirect('home')
-
-    
-    attendance, created = Attendance.objects.get_or_create(
-        student=student,
-        term=cfg.currSemester,
-        classSession=sess
-    )
-    if created:
-        attendance.save()
-        messages.success(request, 'Your attendance has been recorded.')
-    else:
-        messages.warning(request, 'You have already signed in.')
-
-    return redirect('account')
+    return render(request, 'attendance.html', context)
 
 @login_required
 def records(request):
@@ -379,12 +359,3 @@ def fetch_mojang_userinfo(ign):
         raise Exception(response_json.get('error'))
 
     return response_json.get('name'), response_json.get('id')
-
-def generate_qrcode(url, size=30):
-    img = qrcode.make(url, 
-                      image_factory=qrcode.image.svg.SvgImage, 
-                      box_size=size)
-    stream = BytesIO()
-    img.save(stream)
-    svg = stream.getvalue().decode()
-    return svg
