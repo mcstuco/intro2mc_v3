@@ -6,6 +6,16 @@
     Records
 {% endblock %}
 
+{% block script %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
     <div class="m-3 text-left">
         <a class="btn btn-link" href="{% url 'account' %}" >
@@ -35,8 +45,8 @@
                                     <th scope="row">{{ ai.name }}</th>
                                     <th scope="row">{{ ai.absences }}</th>
                                     {% for info in ai.info %}
-                                        <td scope="row" class="font-weight-bold text-uppercase {{ info|get_attendance_bsclass }}">
-                                            {{ info }}
+                                        <td scope="row">
+                                            <i class="{{ info|get_attendance_faclass }}" data-toggle="tooltip" title="{{ info }}"></i>
                                         </td>
                                     {% endfor %}
                                 </tr>
@@ -71,7 +81,7 @@
                                     <th scope="row">{{ ai.missing }}</th>
                                     {% for submission in ai.info %}
                                         <td scope="row">
-                                            <i class="{{ submission|get_hwstatus_faclass }}"></i>
+                                            <i class="{{ submission|get_hwstatus_faclass }}" data-toggle="tooltip" title="{{ submission|get_hwstatus_tooltip }}"></i>
                                         </td>
                                     {% endfor %}
                                 </tr>

@@ -6,6 +6,16 @@
     Attendance
 {% endblock %}
 
+{% block script %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
     {% if user.is_superuser %}
         <div class="m-3 text-left">
@@ -56,8 +66,8 @@
                                 <tr>
                                     <th scope="row">Status</th>
                                     {% for c in classes %}
-                                        <td scope="row" class="font-weight-bold text-uppercase {{ c.status|get_attendance_bsclass }}">
-                                            {{ c.status }}
+                                        <td scope="row">
+                                            <i class="{{ c.status|get_attendance_faclass }}" data-toggle="tooltip" title="{{ c.status }}"></i>
                                         </td>
                                     {% endfor %}
                                 </tr>
