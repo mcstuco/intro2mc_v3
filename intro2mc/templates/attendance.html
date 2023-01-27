@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block script %}
+    {% csrf_token %}
     <script type="text/javascript">
         $(document).ready(function(){
             $(function () {
@@ -15,9 +16,7 @@
         })
 
         {% if user.is_superuser %}
-            {% csrf_token %}
             function rerollcode(date) {
-                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == XMLHttpRequest.DONE) {
@@ -29,9 +28,34 @@
                     }
                 }
                 xhr.open("POST", "https://www.mcstuco.net/api/rerollcode");
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.send("date=" + date);
+            }
+
+            function togglesession(date, action) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        if (xhr.status == 200) {
+                            if (action == "open") {
+                                document.getElementById("id_opened_"+date).removeAttribute("hidden");
+                                document.getElementById("id_closed_"+date).setAttribute("hidden", "hidden");
+                            } else {
+                                document.getElementById("id_opened_"+date).setAttribute("hidden", "hidden");
+                                document.getElementById("id_closed_"+date).removeAttribute("hidden");
+                            }
+                        } else {
+                            alert("Something went wrong.");
+                        }
+                    }
+                }
+                xhr.open("POST", "https://www.mcstuco.net/api/togglesession");
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send("date=" + date + "&action=" + action);
             }
         {% endif %}
     </script>
@@ -50,7 +74,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Code</th>
-                        <th>Accepting</th>
+                        <th>Accepting (click to toggle)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +85,16 @@
                                 <span id="id_{{ c.date }}">{{ c.code }}</span>
                                 <button class="btn btn-info fas fa-redo-alt text-light" onclick="rerollcode('{{ c.date }}')"/>
                             </td>
-                            <td>BUTTON HERE</td>
+                            <td>
+                                <button id="id_opened_{{ c.date }}"
+                                        class="btn btn-primary"
+                                        onclick="togglesession('{{ c.date }}', 'close')"
+                                        {% if not c.accepting %}hidden="hidden"{% endif %}>Opened</button>
+                                <button id="id_closed_{{ c.date }}"
+                                        class="btn btn-danger"
+                                        onclick="togglesession('{{ c.date }}', 'open')"
+                                        {% if c.accepting %}hidden="hidden"{% endif %}>Closed</button>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

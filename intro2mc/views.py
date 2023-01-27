@@ -164,7 +164,7 @@ def attendance(request):
 
     if request.method == 'POST':
         try:
-            sess = ClassSession.objects.get(code=request.POST.get("code").upper(), term=cfg.currSemester)
+            sess = ClassSession.objects.get(code=request.POST.get("code").upper(), term=cfg.currSemester, accepting=True)
             attendance, created = Attendance.objects.get_or_create(
                 student=student,
                 term=cfg.currSemester,
@@ -335,16 +335,37 @@ def api(request, endpoint):
     if endpoint == 'rerollcode':
         if not request.user.is_superuser or request.method != 'POST':
             return HttpResponseForbidden()
+
         try:
             parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
             session = ClassSession.objects.get(date=parseddate)
             session.code=''.join(random.choices(string.ascii_uppercase, k=4))
             session.save()
             return HttpResponse(session.code)
+
         except Exception as e:
             return HttpResponseNotFound()
+
     elif endpoint == 'togglesession':
-        pass
+        if not request.user.is_superuser or request.method != 'POST':
+            return HttpResponseForbidden()
+
+        try:
+            parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
+            session = ClassSession.objects.get(date=parseddate)
+
+            if request.POST['action'] == 'open':
+                session.accepting = True
+            elif request.POST['action'] == 'close':
+                session.accepting = False
+            else:
+                raise IllegalArgumentException('No such option '+request.POST['action'])
+
+            session.save()
+            return HttpResponse("Success!")
+
+        except Exception as e:
+            return HttpResponseNotFound()
 
 
 ########### util methods ###########

@@ -59,6 +59,7 @@ class ClassSession(HasTimeStamps):
     date = models.DateField(primary_key=True)
     code = models.CharField(max_length=200)
     term = models.CharField(max_length=200)
+    accepting = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.term}-{self.date}'
