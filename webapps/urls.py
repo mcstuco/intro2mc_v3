@@ -21,6 +21,7 @@ from intro2mc import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/<str:endpoint>', views.api, name='api'),
     path('', views.home, name='home'),
     path('syllabus/', views.syllabus, name='syllabus'),
     path('server-map/', views.map, name='map'),

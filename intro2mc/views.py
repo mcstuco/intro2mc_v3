@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
+from django.http import HttpResponseForbidden, HttpResponseNotFound, HttpResponse
 
 from mcstatus import MinecraftServer
 import requests
@@ -13,6 +14,7 @@ import uuid
 import json
 import string
 import random
+import datetime
 
 from intro2mc.alerts import *
 from intro2mc.forms import *
@@ -136,6 +138,7 @@ def attendance(request):
     today = timezone.localtime(timezone.now()).date()
 
     if request.user.is_superuser:
+        '''
         sess, created = ClassSession.objects.get_or_create(
             term=cfg.currSemester,
             date=today
@@ -144,9 +147,13 @@ def attendance(request):
             sess.code=''.join(random.choices(string.ascii_uppercase, k=4))
             messages.info(request, 'New class session created.')
         sess.save()
+        '''
+        sessions = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
+        classes = []
+        for s in sessions:
+            classes.append(s)
 
-        context["today"] = str(today)
-        context["code"] = sess.code
+        context["classes"] = classes
         return render(request, 'attendance.html', context)
 
     try:
@@ -192,7 +199,7 @@ def attendance(request):
         'classes': classes,
         'absences': absences,
     }
-    
+
     return render(request, 'attendance.html', context)
 
 @login_required
@@ -320,6 +327,25 @@ def assignments(request):
         })
 
     return render(request, 'assignments.html', context)
+
+########### API ###########
+
+@login_required
+def api(request, endpoint):
+    if endpoint == 'rerollcode':
+        if not request.user.is_superuser or request.method != 'POST':
+            return HttpResponseForbidden()
+        try:
+            parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
+            session = ClassSession.objects.get(date=parseddate)
+            session.code=''.join(random.choices(string.ascii_uppercase, k=4))
+            session.save()
+            return HttpResponse(session.code)
+        except Exception as e:
+            return HttpResponseNotFound()
+    elif endpoint == 'togglesession':
+        pass
+
 
 ########### util methods ###########
 def get_default_context():

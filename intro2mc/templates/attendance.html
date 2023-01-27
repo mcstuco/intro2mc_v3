@@ -10,9 +10,30 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
+                $('[data-toggle="tooltip"]').tooltip();
             })
-        });
+        })
+
+        {% if user.is_superuser %}
+            {% csrf_token %}
+            function rerollcode(date) {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        if (xhr.status == 200) {
+                            document.getElementById("id_"+date).innerHTML = xhr.responseText;
+                        } else {
+                            alert("Something went wrong.");
+                        }
+                    }
+                }
+                xhr.open("POST", "https://www.mcstuco.net/api/rerollcode");
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send("date=" + date);
+            }
+        {% endif %}
     </script>
 {% endblock %}
 
@@ -24,9 +45,27 @@
             </a>
         </div>
         <div class="text-center m-3 p-3 bg-light content-box">
-            <div class="text-center m-3">
-                Code for {{ today }} is <h2 class="m-3 p-3">{{ code }}</h2>
-            </div>
+            <table class="table" style='white-space:nowrap'>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Code</th>
+                        <th>Accepting</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in classes %}
+                        <tr>
+                            <th>{{ c.date }}</th>
+                            <td>
+                                <span id="id_{{ c.date }}">{{ c.code }}</span>
+                                <button class="btn btn-info fas fa-redo-alt text-light" onclick="rerollcode('{{ c.date }}')"/>
+                            </td>
+                            <td>BUTTON HERE</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% else %}
         <div class="m-3 text-left">
@@ -56,13 +95,15 @@
                 {% else %}
                     <div class="table-responsive">
                         <table class="table" style='white-space:nowrap'>
-                            <tbody>
+                            <thead>
                                 <tr>
                                     <th scope="col">Class</th>
                                     {% for c in classes %}
-                                        <td scope="col">{{ c.date }}</td>
+                                        <th scope="col">{{ c.date }}</td>
                                     {% endfor %}
                                 </tr>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <th scope="row">Status</th>
                                     {% for c in classes %}
