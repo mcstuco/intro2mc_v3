@@ -135,19 +135,8 @@ def account(request):
 def attendance(request):
     context = get_default_context()
     cfg = AppConfig().load()
-    today = timezone.localtime(timezone.now()).date()
 
     if request.user.is_superuser:
-        '''
-        sess, created = ClassSession.objects.get_or_create(
-            term=cfg.currSemester,
-            date=today
-        )
-        if created:
-            sess.code=''.join(random.choices(string.ascii_uppercase, k=4))
-            messages.info(request, 'New class session created.')
-        sess.save()
-        '''
         sessions = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
         classes = []
         for s in sessions:
@@ -212,11 +201,7 @@ def records(request):
 
     # Get relevant student, class, and assignment objects
     assignments = Assignment.objects.filter(term=cfg.currSemester, userSubmittable=True).order_by('created_at')
-    sessions = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
-    classes = []
-    for s in sessions:
-        if s.date.weekday() == 1:
-            classes.append(s)
+    classes = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
     students = Student.objects.all().order_by('andrewID')
 
     ### Attendance ###
@@ -332,6 +317,8 @@ def assignments(request):
 
 @login_required
 def api(request, endpoint):
+    cfg = AppConfig.load()
+
     if endpoint == 'rerollcode':
         if not request.user.is_superuser or request.method != 'POST':
             return HttpResponseForbidden()
@@ -339,7 +326,7 @@ def api(request, endpoint):
         try:
             parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
             session = ClassSession.objects.get(date=parseddate)
-            session.code=''.join(random.choices(string.ascii_uppercase, k=4))
+            session.code = ''.join(random.choices(string.ascii_uppercase, k=4))
             session.save()
             return HttpResponse(session.code)
 
@@ -363,6 +350,44 @@ def api(request, endpoint):
 
             session.save()
             return HttpResponse("Success!")
+
+        except Exception as e:
+            return HttpResponseNotFound()
+
+    elif endpoint == 'newsession':
+        if not request.user.is_superuser or request.method != 'POST':
+            return HttpResponseForbidden()
+
+        try:
+            today = timezone.localtime(timezone.now()).date()
+            sess, created = ClassSession.objects.get_or_create(
+                term=cfg.currSemester,
+                date=today
+            )
+            if created:
+                sess.code = ''.join(random.choices(string.ascii_uppercase, k=4))
+                sess.accepting = False
+                sess.save()
+                messages.info(request, 'New class session created.')
+            else:
+                messages.warning(request, 'Class already exists.')
+            return HttpResponse()
+
+        except Exception as e:
+            return HttpResponseNotFound(str(e))
+
+    elif endpoint == 'deletesession':
+        if not request.user.is_superuser or request.method != 'POST':
+            return HttpResponseForbidden()
+
+        try:
+            parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
+            session = ClassSession.objects.get(date=parseddate)
+
+            Attendance.objects.filter(classSession=session).delete()
+            session.delete()
+            messages.info(request, 'Successfully deleted class session.')
+            return HttpResponse()
 
         except Exception as e:
             return HttpResponseNotFound()
