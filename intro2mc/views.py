@@ -430,4 +430,7 @@ def fetch_mojang_userinfo(ign):
     if 'error' in response_json:
         raise Exception(response_json.get('error'))
 
+    if 'id' not in response_json and 'name' not in response_json:
+        raise Exception('User does not exist')
+
     return response_json.get('name'), response_json.get('id')
