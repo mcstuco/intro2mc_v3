@@ -32,6 +32,7 @@ urlpatterns = [
     path('assignments/', views.assignments, name='assignments'),
     path('records/', views.records, name='records'),
     path('registration', views.register_ign, name='registration'),
+    path('toggle-admin', views.toggle_admin, name='toggleadmin'),
     path('admin-panel/', views.admin_panel, name="adminpanel"),
     path('admin-panel/<str:action>', views.admin_panel, name="adminpanel-action"),
     path('404', views.page_not_found, name='404')

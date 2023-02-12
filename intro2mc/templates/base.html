@@ -140,6 +140,10 @@
                     <a      class="p-1 m-1" href="https://github.com/mcstuco/intro2mc_v3/issues/new" target="_blank">Bug Report</a>
                     <div    class="p-1 m-1">|</div>
                     <a      class="p-1 m-1" href="https://github.com/mcstuco/intro2mc_v3" target="_blank">Source Code</a>
+                    {% if user.is_staff %}
+                        <div class="p-1 m-1">|</div>
+                        <a   class="p-1 m-1" href="{% url 'toggleadmin' %}">Toggle Admin</a>
+                    {% endif %}
                 </div>
                 <hr>
                 <div class="text-muted m-2">Developed by Zhengze Gong and Hiroshi Wu</div>

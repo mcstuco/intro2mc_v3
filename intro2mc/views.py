@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User as UserModel
 from django.contrib.auth import logout
 from django.core.cache import cache
 from django.contrib import messages
@@ -312,6 +313,16 @@ def assignments(request):
         })
 
     return render(request, 'assignments.html', context)
+
+@login_required()
+def toggle_admin(request):
+    if not request.user.is_staff:
+        return HTTPResponseForbidden()
+    user = UserModel.objects.get(username=request.user.username)
+    user.is_superuser = not user.is_superuser
+    user.save()
+    messages.info(request, 'Admin status toggled.')
+    return redirect('home')
 
 ########### API ###########
 
