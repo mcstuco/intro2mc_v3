@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('social_django.urls', namespace='social')),
     path('logout/', LogoutView.as_view(template_name="index.html"), name='logout'),
     path('attendance/', views.attendance, name='attendance'),
+    path('excuse/', views.excuse, name='excuse'),
     path('assignments/', views.assignments, name='assignments'),
     path('records/', views.records, name='records'),
     path('registration', views.register_ign, name='registration'),

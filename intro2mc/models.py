@@ -70,6 +70,7 @@ class Attendance(HasTimeStamps):
     term = models.CharField(max_length=200)
     classSession = models.ForeignKey(ClassSession, on_delete=models.PROTECT)
     excused = models.BooleanField(default=False)
+    reason = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return f'{self.student} {self.classSession}'

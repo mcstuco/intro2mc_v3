@@ -193,6 +193,44 @@ def attendance(request):
     return render(request, 'attendance.html', context)
 
 @login_required
+def excuse(request):
+    context = get_default_context()
+    if not request.user.is_superuser:
+        messages.error(request, access_denied_err())
+        return redirect('home')
+    cfg = AppConfig().load()
+
+    if request.method == 'POST':
+        try:
+            stu = Student.objects.get(andrewID=request.POST['student'])
+            sess = ClassSession.objects.get(date=request.POST['classSession'])
+            att, created = Attendance.objects.get_or_create(
+                student=stu,
+                term=cfg.currSemester,
+                classSession=sess
+            )
+            att.reason = request.POST['reason']
+            att.excused = True
+            att.save()
+            if created:
+                messages.success(request, 'Student excused.')
+            else:
+                messages.success(request, 'Attendance updated.')
+        except Exception as e:
+            messages.error(request, generic_err("Unable to find student or class session.", e))
+
+    context['form'] = ExcuseForm()
+    context['excused_absences'] = []
+    for att in Attendance.objects.filter(excused=True).order_by('-updated_at'):
+        d = {}
+        d['date'] = att.updated_at
+        d['session'] = att.classSession.date
+        d['student'] = att.student
+        d['reason'] = att.reason
+        context['excused_absences'].append(d)
+    return render(request, 'excuse.html', context)
+
+@login_required
 def records(request):
     context = get_default_context()
     if not request.user.is_superuser:

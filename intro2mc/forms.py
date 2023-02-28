@@ -30,3 +30,13 @@ class StudentForm(forms.ModelForm):
         if not re.match("^[\w]+$", ign):
             raise forms.ValidationError("Illegal characters detected. Only a-z, A-Z, 0-9 and _ are allowed.")
         return ign
+
+class ExcuseForm(forms.ModelForm):
+    class Meta:
+        model = models.Attendance
+        fields = ['student', 'classSession', 'reason']
+        widgets = {
+            'student': forms.Select(attrs={'class': 'form-control'}),
+            'classSession': forms.Select(attrs={'class': 'form-control'}),
+            'reason': forms.TextInput(attrs={'class': 'form-control bg-white'})
+        }

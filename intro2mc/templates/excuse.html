@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Excused Absence
+{% endblock %}
+
+{% block content %}
+    <div class="m-3 text-left">
+        <a class="btn btn-link" onclick="history.back()">
+            <i class="fas fa-angle-left"></i> Back
+        </a>
+    </div>
+    <div class="text-center my-3 p-3 bg-light content-box">
+        <div class="my-4">
+            <span class="h3">Enter information to excuse student</span>
+            <div class="d-flex justify-content-center">
+                <form action="{% url 'excuse' %}" method="post" class="my-4 w-75">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col mx-2">
+                            <label class="float-left">Student:</label>
+                            {{ form.student }}
+                            {% for err in form.student.errors %}
+                                <div class="text-danger m-2">{{ err|escape }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col mx-2">
+                            <label class="float-left">Session:</label>
+                            {{ form.classSession }}
+                            {% for err in form.classSession.errors %}
+                                <div class="text-danger m-2">{{ err|escape }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mx-2 my-1">
+                        <label class="float-left">Reason:</label>
+                        {{ form.reason }}
+                        {% for err in form.reason.errors %}
+                            <div class="text-danger m-2">{{ err|escape }}</div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary mx-2 my-4">Submit/Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="p-3 h3">Recent Excused Absences</div>
+        <table class="table" style='white-space:nowrap'>
+            <thead>
+                <tr>
+                    <th>Datetime Excused</th>
+                    <th>Class Session</th>
+                    <th>Student</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in excused_absences %}
+                    <tr>
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.session }}</td>
+                        <td>{{ a.student }}</td>
+                        <td>{{ a.reason }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+{% endblock %}
