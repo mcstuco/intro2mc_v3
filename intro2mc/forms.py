@@ -40,3 +40,20 @@ class ExcuseForm(forms.ModelForm):
             'classSession': forms.Select(attrs={'class': 'form-control'}),
             'reason': forms.TextInput(attrs={'class': 'form-control bg-white'})
         }
+
+class InviteForm(forms.ModelForm):
+    class Meta:
+        model = models.InvitedStudent
+        fields = ['IGN', 'invitedBy']
+        widgets = {
+            'IGN': forms.TextInput(attrs={'class': 'form-control bg-white'}),
+            'invitedBy': forms.Select(attrs={'class': 'form-control'})
+        }
+
+    def clean_IGN(self):
+        ign = self.cleaned_data['IGN']
+        if len(ign) > 16:
+            raise forms.ValidationError("IGNs cannot exceed 16 characters")
+        if not re.match("^[\w]+$", ign):
+            raise forms.ValidationError("Illegal characters detected. Only a-z, A-Z, 0-9 and _ are allowed.")
+        return ign

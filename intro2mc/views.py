@@ -88,6 +88,41 @@ def register_ign(request):
 
     return render(request, 'registration.html', context)
 
+@login_required
+def invite(request):
+    context = get_default_context()
+    if not request.user.is_superuser:
+        messages.error(request, access_denied_err())
+        return redirect('home')
+    cfg = AppConfig().load()
+
+    if request.method == 'POST':
+        form = InviteForm(request.POST)
+        if form.is_valid():
+            try:
+                case_correct_username, uid = fetch_mojang_userinfo(form.cleaned_data["IGN"])
+            except Exception as e:
+                messages.error(request, f'Error fetching uuid for {form.cleaned_data["IGN"]}. This usually means that you entered a nonexistent username.')
+            else:
+                invited, created = InvitedStudent.objects.get_or_create(
+                    IGN=case_correct_username,
+                    uuid=str(uuid.UUID(uid)),
+                    invitedBy=form.cleaned_data['invitedBy']
+                )
+                if created:
+                    invited.save()
+                    messages.success(request, f'{case_correct_username} has been successfully whitelisted.')
+                else:
+                    messages.warning(request, f'{case_correct_username} has already been invited by {form.invitedBy}.')
+        context['form'] = form
+    else:
+        context['form'] = InviteForm()
+
+    context['invited_students'] = []
+    for s in InvitedStudent.objects.all().order_by('-created_at'):
+        context['invited_students'].append(s)
+    return render(request, 'invite.html', context)
+
 def page_not_found(request, exception=None):
     messages.error(request, "This page does not exist.")
     return redirect('home')

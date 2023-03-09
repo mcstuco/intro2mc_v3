@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Invited Students
+{% endblock %}
+
+{% block content %}
+    <div class="m-3 text-left">
+        <a class="btn btn-link" onclick="history.back()">
+            <i class="fas fa-angle-left"></i> Back
+        </a>
+    </div>
+    <div class="text-center my-3 p-3 bg-light content-box">
+        <div class="my-4">
+            <span class="h3">Enter information to invite student</span>
+            <div class="d-flex justify-content-center">
+                <form action="{% url 'invite' %}" method="post" class="my-4 w-75">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col mx-2">
+                            <label class="float-left">IGN:</label>
+                            {{ form.IGN }}
+                            {% for err in form.IGN.errors %}
+                                <div class="text-danger m-2">{{ err|escape }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col mx-2">
+                            <label class="float-left">Inviter:</label>
+                            {{ form.invitedBy }}
+                            {% for err in form.invitedBy.errors %}
+                                <div class="text-danger m-2">{{ err|escape }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mx-2 my-4">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="p-3 h3">All Invited Students</div>
+        <table class="table" style='white-space:nowrap'>
+            <thead>
+                <tr>
+                    <th>IGN</th>
+                    <th>Invited By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in invited_students %}
+                    <tr>
+                        <td>{{ s.IGN }}</td>
+                        <td>{{ s.invitedBy }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+{% endblock %}
