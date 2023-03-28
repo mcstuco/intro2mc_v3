@@ -408,7 +408,7 @@ def api(request, endpoint):
             return HttpResponseForbidden()
 
         try:
-            parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
+            parseddate = parse_display_date(request.POST['date'])
             session = ClassSession.objects.get(date=parseddate)
             session.code = ''.join(random.choices(string.ascii_uppercase, k=4))
             session.save()
@@ -422,7 +422,7 @@ def api(request, endpoint):
             return HttpResponseForbidden()
 
         try:
-            parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
+            parseddate = parse_display_date(request.POST['date'])
             session = ClassSession.objects.get(date=parseddate)
 
             if request.POST['action'] == 'open':
@@ -465,7 +465,7 @@ def api(request, endpoint):
             return HttpResponseForbidden()
 
         try:
-            parseddate = datetime.datetime.strptime(request.POST['date'], '%b. %d, %Y').date()
+            parseddate = parse_display_date(request.POST['date'])
             session = ClassSession.objects.get(date=parseddate)
 
             Attendance.objects.filter(classSession=session).delete()
@@ -518,3 +518,9 @@ def fetch_mojang_userinfo(ign):
         raise Exception('User does not exist')
 
     return response_json.get('name'), response_json.get('id')
+
+def parse_display_date(datestring):
+    if '.' in datestring:
+        return datetime.datetime.strptime(datestring, '%b. %d, %Y').date()
+    else:
+        return datetime.datetime.strptime(datestring, '%B %d, %Y').date()
