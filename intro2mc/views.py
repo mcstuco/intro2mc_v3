@@ -274,7 +274,7 @@ def records(request):
     cfg = AppConfig().load()
 
     # Get relevant student, class, and assignment objects
-    assignments = Assignment.objects.filter(term=cfg.currSemester, userSubmittable=True).order_by('created_at')
+    assignments = Assignment.objects.filter(term=cfg.currSemester).order_by('created_at')
     classes = ClassSession.objects.filter(term=cfg.currSemester).order_by('date')
     students = Student.objects.all().order_by('andrewID')
 
