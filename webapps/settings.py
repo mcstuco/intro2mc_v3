@@ -172,6 +172,6 @@ STATIC_URL = '/static/'
 
 # Absolute path to server files
 
-SERVER_DIR = '/home/ubuntu/servers/survival'
+SERVER_DIR = '/data/mcstuco/survival'
 
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
