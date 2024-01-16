@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# install git, java, sqlite
+sudo apt install git-lfs openjdk-17-jre-headless sqlite3 -y
+
 # install python django and dependencies
 sudo apt install python3-pip libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 -y
 pip3 install -r ./requirements.txt
@@ -13,8 +16,8 @@ cat ./apache2_conf_addon.txt | sudo tee -a /etc/apache2/apache2.conf
 # AllowOverride None
 # Require all denied
 #</Directory>
-sudo chgrp -R www-data ./
-sudo chmod -R g+w ./
+sudo chgrp -R www-data ../
+sudo chmod -R g+w ../
 
 # WARNING: The script sqlformat is installed in '/home/mcstuco/.local/bin' which is not on PATH.
 # WARNING: The script qr is installed in '/home/mcstuco/.local/bin' which is not on PATH.
@@ -40,3 +43,13 @@ sudo service apache2 restart
 # configure website using superuser:
 # https://www.mcstuco.net/admin-panel/semester
 # adding "staff" status to instructors' accounts allows toggling admin
+
+echo "Configuring IP Table... \n"
+sudo iptables -L && \
+sudo iptables-save > ~/iptables-rules && \
+sudo iptables -P INPUT ACCEPT && \
+sudo iptables -P OUTPUT ACCEPT && \
+sudo iptables -P FORWARD ACCEPT && \
+sudo iptables -F && \
+sudo iptables-save | sudo tee /etc/iptables.conf && \
+echo "My service will automatically do sudo iptables-restore < /etc/iptables.conf to load saved iptables.conf on server start."

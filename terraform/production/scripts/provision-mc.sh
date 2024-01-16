@@ -1,12 +1,6 @@
 
-# install git
-sudo apt install git-lfs -y
-
-# install java
-sudo apt install openjdk-17-jre-headless -y
-
-# install sqlite
-sudo apt install sqlite3 -y
+# install git, java, sqlite
+sudo apt install git-lfs openjdk-17-jre-headless sqlite3 -y
 
 # set StrictHostKeyChecking to no to avoid interactive prompt
 mkdir ~/.ssh

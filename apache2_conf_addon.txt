@@ -1,15 +1,15 @@
 
-WSGIScriptAlias / /data/intro2mc_v3/webapps/wsgi.py application-group=%{GLOBAL}
-WSGIPythonPath /data/intro2mc_v3
+WSGIScriptAlias / /home/mcstuco/intro2mc_v3/webapps/wsgi.py application-group=%{GLOBAL}
+WSGIPythonPath /home/mcstuco/intro2mc_v3
 
-<Directory /data/intro2mc_v3>
+<Directory /home/mcstuco/intro2mc_v3>
 <Files wsgi.py>
 Require all granted
 </Files>
 </Directory>
 
-Alias /static /data/intro2mc_v3/collected_static
-<Directory /data/intro2mc_v3/collected_static>
+Alias /static /home/mcstuco/intro2mc_v3/collected_static
+<Directory /home/mcstuco/intro2mc_v3/collected_static>
 Order allow,deny
 Allow from all
 </Directory>
