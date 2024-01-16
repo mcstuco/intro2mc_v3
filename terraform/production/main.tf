@@ -82,14 +82,14 @@ resource "aws_instance" "this" {
 # Attach the separate data volume to the instance, if so configured
 
 resource "aws_volume_attachment" "this" {
-  count       = var.data_volume_id == "" ? 0 : 1 # only create this resource if an external EBS data volume was provided
+  count       = 1
   device_name = "/dev/xvdh"                      # note: this depends on the AMI, and can't be arbitrarily changed
   instance_id = aws_instance.this.id
-  volume_id   = var.data_volume_id
+  volume_id   = aws_ebs_volume.this.id
 }
 
 resource "null_resource" "provisioners" {
-  count      = var.data_volume_id == "" ? 0 : 1 # only create this resource if an external EBS data volume was provided
+  count      = 1
   depends_on = [aws_volume_attachment.this]     # because we depend on the EBS volume being available
 
   triggers = {
@@ -114,6 +114,7 @@ resource "null_resource" "provisioners" {
 
   provisioner "remote-exec" {
     connection {
+      host = self.triggers.public_ip
       agent = true
     }
     script = "${path.module}/scripts/provision-mc.sh"

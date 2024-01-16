@@ -84,11 +84,6 @@ variable "ebs_volume_size" {
   default     = 16 # this matches the other defaults, including the selected AMI
 }
 
-variable "data_volume_id" {
-  description = "The ID of the EBS volume to mount as `/data`"
-  default     = "vol-001c56a3a6d33ba3d" # empty string means no EBS volume will be attached
-}
-
 # Swap
 
 variable "swap_file_size" {

@@ -5,19 +5,14 @@ sudo apt install git-lfs openjdk-17-jre-headless sqlite3 -y
 
 # install python django and dependencies
 sudo apt install python3-pip libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 -y
-pip3 install -r ./requirements.txt
+pip install -r ./requirements.txt
 
 # install apache2 and configure wsgi
-sudo apt install apache2 libapache2-mod-wsgi-py3
-cat ./apache2_conf_addon.txt | sudo tee -a /etc/apache2/apache2.conf
-# comment the next part inside apache2.conf out
-##<Directory />
-# Options FollowSymLinks
-# AllowOverride None
-# Require all denied
-#</Directory>
-sudo chgrp -R www-data ../
-sudo chmod -R g+w ../
+sudo apt install apache2 libapache2-mod-wsgi-py3 -y
+cat ./apache2.conf | sudo tee /etc/apache2/apache2.conf > /dev/null
+
+sudo chgrp -R www-data ../intro2mc_v3/
+sudo chmod -R g+w ../intro2mc_v3/
 
 # WARNING: The script sqlformat is installed in '/data/.local/bin' which is not on PATH.
 # WARNING: The script qr is installed in '/data/.local/bin' which is not on PATH.
@@ -29,13 +24,13 @@ sudo chmod -R g+w ../
 
 # setup django
 
-python3 manage.py runserver
+python3 manage.py runserver # should kill
 # I don't know what's the better way to create the database
 
 python3 manage.py makemigrations intro2mc
 python3 manage.py migrate
 python3 manage.py createsuperuser
-python3 manage.py collectstatic
+python3 manage.py collectstatic # will prompt
 
 # reload apache
 sudo service apache2 restart

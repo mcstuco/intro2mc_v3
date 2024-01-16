@@ -30,7 +30,7 @@ DEBUG = False
 
 CSRF_TRUSTED_ORIGINS=['https://www.mcstuco.net']
 
-ALLOWED_HOSTS = ['www.mcstuco.net']
+ALLOWED_HOSTS = ['*'] # WARNING: although it is dangerous, we allow all hosts for now (['www.mcstuco.net'])
 
 
 # Application definition

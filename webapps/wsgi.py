@@ -8,6 +8,11 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 """
 
 import os
+import sys
+import warnings
+warnings.warn(f"We currently has sys.path: {sys.path}")
+sys.path.insert(0, '/home/ubuntu/.local/lib/python3.10/site-packages')
+sys.path = ['/home/ubuntu/.local/lib/python3.10/site-packages'] + sys.path
 
 from django.core.wsgi import get_wsgi_application
 

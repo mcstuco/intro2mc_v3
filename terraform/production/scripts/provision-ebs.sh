@@ -16,8 +16,6 @@ else
   sudo mkfs -t "$DEV_FS_TYPE" "/dev/$DEV_NAME"
 fi
 
-sudo chown -R $USER:$USER "$MOUNT_POINT"
-
 # Wait until we can determine the UUID of the EBS device that was attached
 while true; do
   uuid="$(ls -la /dev/disk/by-uuid/ | grep $DEV_NAME | sed -e 's/.*\([0-9a-f-]\{36\}\).*/\1/')" # seems more reliable than using blkid :shrug:
@@ -31,6 +29,7 @@ done
 
 # Mount EBS volume, and set it to auto-mount after reboots
 sudo mkdir "$MOUNT_POINT"
+sudo chown -R $USER:$USER "$MOUNT_POINT"
 echo "UUID=$uuid  $MOUNT_POINT  $DEV_FS_TYPE  defaults,nofail  0  2" | sudo tee -a /etc/fstab
 sudo mount -a
 
