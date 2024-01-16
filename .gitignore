@@ -8,3 +8,10 @@ env/
 client_secrets.json
 keys.ini
 */migrations
+.env
+*.swp
+*.tfstate
+*.lock
+.terraform.lock.hcl
+*.backup
+terraform-provider-*
