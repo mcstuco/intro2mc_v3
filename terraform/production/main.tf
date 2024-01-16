@@ -116,17 +116,8 @@ resource "null_resource" "provisioners" {
     connection {
       host = self.triggers.public_ip
       agent = true
+      user = "ubuntu"
     }
     script = "${path.module}/scripts/provision-mc.sh"
   }
-
-  # provisioner "file" {
-  #   source      = "/home/koke_cacao/Documents/Koke_Cacao/Minecraft/mcstuco/lobby/world"
-  #   destination = "/data/mcstuco/lobby/world"
-  # }
-
-  # provisioner "remote-exec" { # for some reason will fail?
-  #   when   = destroy
-  #   inline = ["sudo umount -v ${self.triggers.device_name}"]
-  # }
 }

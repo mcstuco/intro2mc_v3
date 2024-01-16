@@ -9,6 +9,16 @@ resource "aws_security_group" "this" {
   tags   = merge(var.tags, tomap({ "Name" = "${var.hostname}" }))
 }
 
+# ICMP
+resource "aws_security_group_rule" "allow_icmp" {
+  security_group_id = aws_security_group.this.id
+  type        = "ingress"
+  from_port   = -1   # For ICMP, -1 indicates all types
+  to_port     = -1   # For ICMP, -1 indicates all codes
+  protocol    = "icmp"
+  cidr_blocks = ["0.0.0.0/0"]  # Adjust as needed for your IP range
+}
+
 # Incoming SSH & outgoing ANY needs to be allowed for provisioning to work
 
 resource "aws_security_group_rule" "outgoing_any" {
