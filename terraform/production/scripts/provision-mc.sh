@@ -49,12 +49,10 @@ sudo chmod -R g+w ../intro2mc_v3/
 # Now there are some manual steps:
 # (1) You should import secrets: DJANGO_SECRET, GOOGLE_OAUTH2_KEY, GOOGLE_OAUTH2_SECRET
 # (2) execute `env/bin/python manage.py runserver 0.0.0.0:8080` and kill it to create database
-# (3) execute `env/bin/python manage.py makemigrations intro2mc`
-# (4) execute `env/bin/python manage.py migrate`
-# (5) execute `env/bin/python manage.py createsuperuser` and follow the prompt
-# (6) execute `env/bin/python manage.py collectstatic`
-# (7) execute `env/bin/python manage.py` again
+# (3) execute `env/bin/python manage.py makemigrations intro2mc && env/bin/python manage.py migrate && env/bin/python manage.py createsuperuser` and follow the prompt
+# (6) execute `env/bin/python manage.py collectstatic && env/bin/python manage.py runserver` again and close
 # (8) execute `sudo service apache2 restart`
 # (9) execute `sudo chmod -R u+w /data/intro2mc_v3/db.sqlite3 && sudo chown -R www-data:www-data /data/intro2mc_v3/db.sqlite3` to allow apache to write to db.sqlite3
-# (9) configure website using superuser: https://www.mcstuco.net/admin-panel/semester adding "staff" status to instructors' accounts allows toggling admin
+# (9) configure website using superuser: https://mc.kokecacao.me//admin-panel/semester adding "staff" status to instructors' accounts allows toggling admin
+# (*) if you use cloudflare, make sure set to SSL/TLS to "flexible" to avoid force redirect to https
 # if anything wrong happened, check /var/log/apache2/error.log
