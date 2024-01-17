@@ -51,6 +51,26 @@ resource "aws_security_group_rule" "incoming_http" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "incoming_http_extra" {
+  count             = var.allow_incoming_http ? 1 : 0
+  security_group_id = aws_security_group.this.id
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "incoming_dynmap" {
+  count             = var.allow_incoming_http ? 1 : 0
+  security_group_id = aws_security_group.this.id
+  type              = "ingress"
+  from_port         = 8123
+  to_port           = 8123
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group_rule" "incoming_https" {
   count             = var.allow_incoming_https ? 1 : 0
   security_group_id = aws_security_group.this.id

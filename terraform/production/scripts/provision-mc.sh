@@ -53,6 +53,8 @@ sudo chmod -R g+w ../intro2mc_v3/
 # (6) execute `env/bin/python manage.py collectstatic && env/bin/python manage.py runserver` again and close
 # (8) execute `sudo service apache2 restart`
 # (9) execute `sudo chmod -R u+w /data/intro2mc_v3/db.sqlite3 && sudo chown -R www-data:www-data /data/intro2mc_v3/db.sqlite3` to allow apache to write to db.sqlite3
-# (9) configure website using superuser: https://mc.kokecacao.me//admin-panel/semester adding "staff" status to instructors' accounts allows toggling admin
+# (9) configure website using superuser: https://mc.kokecacao.me/admin/ adding "staff" status to instructors' accounts allows toggling admin
+# (10) go to https://mc.kokecacao.me/admin-panel/semester for semester configuration
 # (*) if you use cloudflare, make sure set to SSL/TLS to "flexible" to avoid force redirect to https
+# (*) if you use cloudflare, make sure "Proxied" website, but don't "Proxied" minecraft server
 # if anything wrong happened, check /var/log/apache2/error.log
