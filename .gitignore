@@ -16,3 +16,5 @@ keys.ini
 *.backup
 terraform-provider-*
 .terraform.tfstate.lock.info
+
+collected_static
