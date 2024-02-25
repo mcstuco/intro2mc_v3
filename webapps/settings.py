@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CSRF_TRUSTED_ORIGINS=['https://mc.kokecacao.me']
+CSRF_TRUSTED_ORIGINS=['https://mcstuco.net']
 
 ALLOWED_HOSTS = ['*'] # WARNING: although it is dangerous, we allow all hosts for now (['www.mcstuco.net'])
 
