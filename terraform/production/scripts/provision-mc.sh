@@ -60,4 +60,5 @@ sudo chmod -R g+w ../intro2mc_v3/
 # (11) go to https://mcstuco.net/admin-panel/semester for semester configuration
 # (*) if you use cloudflare, make sure set to SSL/TLS to "flexible" to avoid force redirect to https
 # (*) if you use cloudflare, make sure "Proxied" website, but don't "Proxied" minecraft server
+# (*) if you change domains, make sure `App configs` in django database and other settings in file are set to correct domains
 # if anything wrong happened, check /var/log/apache2/error.log
