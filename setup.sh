@@ -5,6 +5,7 @@ sudo apt install git-lfs openjdk-17-jre-headless sqlite3 -y
 
 # install python django and dependencies
 sudo apt install python3-pip libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 -y
+pip install --upgrade pip
 pip install -r ./requirements.txt
 
 # install apache2 and configure wsgi
