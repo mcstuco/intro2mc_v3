@@ -26,6 +26,8 @@ sudo chmod -R g+w ../intro2mc_v3/
 # setup django
 
 python3 manage.py runserver # should kill
+sudo chgrp -R www-data ../intro2mc_v3/
+sudo chmod -R g+w ../intro2mc_v3/
 # I don't know what's the better way to create the database
 
 python3 manage.py makemigrations intro2mc
@@ -37,6 +39,21 @@ python3 manage.py collectstatic # will prompt
 sudo service apache2 restart
 
 # configure website using superuser:
+# https://www.mcstuco.net/admin
+# AppConfig:
+# - CurrSemester: f24
+# - Syllabus: https://docs.google.com/document/d/15pjUb0WqTo_9UXciALYuUtajpPnz4tvRY8Z_3XCAGbI/edit?usp=sharing
+# - ServerMapURL: server.mcstuco.net:25699
+# - ServerAddress: server.mcstuco.net
+# - Roster: hankec,hankec,hankec,hankec
+# Assignments:
+# - Term: f24
+# - Name: hw1
+# - Description: Build a house.
+# Class sessions:
+# - Date: just select one
+# - Code: ABCD (must be 4 uppercase characters)
+# - Term: f24
 # https://www.mcstuco.net/admin-panel/semester
 # adding "staff" status to instructors' accounts allows toggling admin
 
