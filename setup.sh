@@ -43,7 +43,7 @@ sudo service apache2 restart
 # AppConfig:
 # - CurrSemester: f24
 # - Syllabus: https://docs.google.com/document/d/15pjUb0WqTo_9UXciALYuUtajpPnz4tvRY8Z_3XCAGbI/edit?usp=sharing
-# - ServerMapURL: server.mcstuco.net:25699
+# - ServerMapURL: http://server.mcstuco.net:8123
 # - ServerAddress: server.mcstuco.net
 # - Roster: hankec,hankec,hankec,hankec
 # Assignments:
