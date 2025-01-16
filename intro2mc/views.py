@@ -75,7 +75,7 @@ def register_ign(request):
         try:
             case_correct_username, id = fetch_mojang_userinfo(form.cleaned_data["IGN"])
         except Exception as e:
-            messages.error(request, f'Error fetching uuid for {form.cleaned_data["IGN"]}. This usually means that you entered a nonexistent username.')
+            messages.error(request, f'Error fetching uuid for {form.cleaned_data["IGN"]}. Try clicking the Submit button again. If it still does not work, it is usually means that you entered a nonexistent username.')
             return render(request, 'registration.html', context)
         else:
             student.uuid = str(uuid.UUID(id))
@@ -102,7 +102,7 @@ def invite(request):
             try:
                 case_correct_username, uid = fetch_mojang_userinfo(form.cleaned_data["IGN"])
             except Exception as e:
-                messages.error(request, f'Error fetching uuid for {form.cleaned_data["IGN"]}. This usually means that you entered a nonexistent username.')
+                messages.error(request, f'Error fetching uuid for {form.cleaned_data["IGN"]}. Try clicking the Submit button again. If it still does not work, it is usually means that you entered a nonexistent username.')
             else:
                 invited, created = InvitedStudent.objects.get_or_create(
                     IGN=case_correct_username,
@@ -506,7 +506,18 @@ def fetch_userinfo(request):
     return userinfo
 
 def fetch_mojang_userinfo(ign):
-    response = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{ign}")
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+    }
+    
+    response = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{ign}", headers=headers, verify=True)
     if response.status_code == STATUS_NO_CONTENT:
         raise Exception('Unable to retrieve uuid for this username')
 
